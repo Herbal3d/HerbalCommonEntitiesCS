@@ -23,6 +23,7 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
     public abstract class BLogger {
         public abstract void SetVerbose(bool val);
         public abstract void Log(string msg, params Object[] args);
+        public abstract void InfoFormat(string msg, params Object[] args);
         public abstract void DebugFormat(string msg, params Object[] args);
         public abstract void ErrorFormat(string msg, params Object[] args);
     }
@@ -36,6 +37,10 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
         }
 
         public override void Log(string msg, params Object[] args) {
+            System.Console.WriteLine(msg, args);
+        }
+
+        public override void InfoFormat(string msg, params Object[] args) {
             System.Console.WriteLine(msg, args);
         }
 
@@ -84,6 +89,10 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
         }
 
         public override void Log(string msg, params Object[] args) {
+            _log.InfoFormat(msg, args);
+        }
+
+        public override void InfoFormat(string msg, params Object[] args) {
             _log.InfoFormat(msg, args);
         }
 

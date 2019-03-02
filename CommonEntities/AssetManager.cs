@@ -21,8 +21,6 @@ using OpenSim.Services.Interfaces;
 
 using org.herbal3d.cs.CommonEntitiesUtil;
 
-using CSJ2K;
-
 namespace org.herbal3d.cs.CommonEntities {
     public class AssetManager : IDisposable {
     #pragma warning disable 414

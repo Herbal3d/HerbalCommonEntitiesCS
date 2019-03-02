@@ -33,7 +33,7 @@ using OpenMetaverse.Imaging;
 
 using org.herbal3d.cs.CommonEntitiesUtil;
 
-using CSJ2K;
+// using CSJ2K;
 
 namespace org.herbal3d.cs.CommonEntities {
 
