@@ -29,7 +29,7 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
     }
 
     public class LoggerConsole : BLogger {
-        private static readonly ILog _log = LogManager.GetLogger("convoar");
+        private static readonly ILog _log = LogManager.GetLogger("LoggerConsole");
 
         private bool _verbose = false;
         public override void SetVerbose(bool value) {
@@ -58,7 +58,7 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
 
     // Do logging with Log4net
     public class LoggerLog4Net : BLogger {
-        private static readonly string _logHeader = "[Logger]";
+        private static readonly string _logHeader = "[LoggerLog4Net]";
 
         private ILog _log;
 
