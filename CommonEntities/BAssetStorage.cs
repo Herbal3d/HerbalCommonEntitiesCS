@@ -44,8 +44,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public Task<byte[]> Fetch(string pEntityName) {
             return Task<byte[]>.Run(() => {
                 byte[] ret = new byte[0];
-                string strippedEntityName = Path.GetFileNameWithoutExtension(pEntityName);
-                string outDir = this.GetStorageDir(strippedEntityName);
+                string outDir = this.GetStorageDir(pEntityName);
                 string absDir = Path.GetFullPath(outDir);
                 string absFilename = Path.Combine(absDir, pEntityName);
                 try {
@@ -62,6 +61,32 @@ namespace org.herbal3d.cs.CommonEntities {
                 catch (Exception e) {
                     _log.ErrorFormat("{0} Exception fetching {1}: {2}", _logHeader, pEntityName, e);
                     ret = new byte[0];
+                }
+                return ret;
+            });
+        }
+
+        // Given an entity name ("entity.ext"), return a Stream accessing the item
+        public Task<Stream> GetStream(string pEntityName) {
+            return Task<Stream>.Run(() => {
+                Stream ret = null;
+                string outDir = this.GetStorageDir(pEntityName);
+                string absDir = Path.GetFullPath(outDir);
+                string absFilename = Path.Combine(absDir, pEntityName);
+                try {
+                    ret = File.Open(absFilename, FileMode.Open);
+                }
+                catch (DirectoryNotFoundException e) {
+                    _log.ErrorFormat("{0} DirectoryNotFound exception fetching {1}", _logHeader, pEntityName);
+                    ret = null;
+                }
+                catch (FileNotFoundException e) {
+                    _log.ErrorFormat("{0} FileNotFound exception fetching {1}", _logHeader, pEntityName);
+                    ret = null;
+                }
+                catch (Exception e) {
+                    _log.ErrorFormat("{0} Exception fetching {1}: {2}", _logHeader, pEntityName, e);
+                    ret = null;
                 }
                 return ret;
             });
