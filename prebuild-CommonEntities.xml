@@ -35,7 +35,7 @@
       <Reference name="OpenSim.Region.PhysicsModules.SharedBase"/>
       <Reference name="OpenSim.Services.Interfaces"/>
 
-      <Reference name="CommonEntitiesUtil" />
+      <Reference name="Herbal3d.CommonEntitiesUtil" />
 
       <Reference name="CSJ2K" />
       <Reference name="Nini" />
