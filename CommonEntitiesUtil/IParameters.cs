@@ -24,4 +24,29 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
         //   value of the requested parameter name.
         T P<T>(string paramName);
     }
+
+    public class ParameterCollection : IParameters {
+
+        Dictionary<string, object> _params = new Dictionary<string, object>();
+
+        public ParameterCollection() {
+        }
+
+        public T P<T>(string pName) {
+            T ret = default(T);
+            Object val;
+            if (_params.TryGetValue(pName.ToLower(), out val)) {
+                if (val is T) {
+                    ret = (T)val;
+                }
+            }
+            return ret;
+        }
+
+        public ParameterCollection Add(string pName, Object pValue) {
+            _params.Add(pName.ToLower(), pValue);
+            return this;
+        }
+        
+    }
 }
