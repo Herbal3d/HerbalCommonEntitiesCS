@@ -81,6 +81,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     // instanceList.Add(ConvoarTerrain.CreateTerrainMesh(scene, mesher, assetManager));
                     terrainInstance = await Terrain.CreateTerrainMesh(scene, mesher, assetManager, _log, _params);
                     CoordAxis.FixCoordinates(terrainInstance, new CoordAxis(CoordAxis.RightHand_Yup | CoordAxis.UVOriginLowerLeft));
+                    instanceList.Add(terrainInstance);
                 }
 
                 // Twist the OpenSimulator Z-up coordinate system to the OpenGL Y-up
