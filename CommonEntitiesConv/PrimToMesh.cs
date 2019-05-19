@@ -60,20 +60,20 @@ namespace org.herbal3d.cs.CommonEntities {
                         LogBProgress("{0}: CreateMeshResource: creating mesh", _logHeader);
                         // _tats.numMeshAssets++;
                         var dispable = await MeshFromPrimMeshData(sog, sop, prim, assetManager, lod);
-                        displayable = new Displayable(dispable, sop, _params);
+                        displayable = new Displayable(dispable, CollectObjectAttributes(sop), _params);
                     }
                     else {
                         LogBProgress("{0}: CreateMeshResource: creating sculpty", _logHeader);
                         // _stats.numSculpties++;
                         var dispable = await MeshFromPrimSculptData(sog, sop, prim, assetManager, lod);
-                        displayable = new Displayable(dispable, sop, _params);
+                        displayable = new Displayable(dispable, CollectObjectAttributes(sop), _params);
                     }
                 }
                 else {
                     LogBProgress("{0}: CreateMeshResource: creating primshape", _logHeader);
                     // _stats.numSimplePrims++;
                     var dispable = await MeshFromPrimShapeData(sog, sop, prim, assetManager, lod);
-                    displayable = new Displayable(dispable, sop, _params);
+                    displayable = new Displayable(dispable, CollectObjectAttributes(sop), _params);
                 }
             }
             catch (Exception e) {
@@ -83,6 +83,16 @@ namespace org.herbal3d.cs.CommonEntities {
                 throw new Exception(errorMsg);
             }
             return displayable;
+        }
+
+        // Attributes from the SceneObjectPart are passed in an 'object attributes' structure.
+        // Build the attribute list for this SOP.
+        private BAttributes CollectObjectAttributes(SceneObjectPart pSop) {
+            BAttributes attributes = new BAttributes();
+            attributes.Add("IsRoot", pSop.IsRoot);
+            attributes.Add("HasScriptsInInventory", pSop.Inventory.ContainsScripts());
+            attributes.Add("IsPhysical", (pSop.PhysActor != null && pSop.PhysActor.IsPhysical));
+            return attributes;
         }
 
         private async Task<DisplayableRenderable> MeshFromPrimShapeData(SceneObjectGroup sog, SceneObjectPart sop,

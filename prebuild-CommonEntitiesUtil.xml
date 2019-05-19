@@ -19,7 +19,6 @@
       <Reference name="Mono.Addins" />
 
       <Reference name="OpenMetaverse" />
-      <Reference name="OpenMetaverseTypes" />
 
       <Reference name="log4net" />
 

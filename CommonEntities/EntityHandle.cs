@@ -19,7 +19,9 @@ using System.Collections.Generic;
 
 using OMV = OpenMetaverse;
 
-namespace org.herbal3d.cs.CommonEntitiesUtil {
+using org.herbal3d.cs.CommonEntitiesUtil;
+
+namespace org.herbal3d.cs.CommonEntities {
 
     // Class for collecting all me mess around asset names.
     // All filename, type, and version conversions are done here.

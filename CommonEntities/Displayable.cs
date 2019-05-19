@@ -15,9 +15,8 @@
  */
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
-
-using OpenSim.Region.Framework.Scenes;
 
 using org.herbal3d.cs.CommonEntitiesUtil;
 
@@ -67,7 +66,6 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // Information from OpenSimulator
         public OMV.UUID baseUUID = OMV.UUID.Zero;   // the UUID of the original object that careated is displayable
-        public SceneObjectPart baseSOP = null;
         public BAttributes attributes = new BAttributes();
 
         private readonly IParameters _params;
@@ -81,22 +79,24 @@ namespace org.herbal3d.cs.CommonEntities {
             renderable = pRenderable;
         }
 
-        public Displayable(DisplayableRenderable pRenderable, SceneObjectPart sop, IParameters pParams) : this(pParams) {
-            name = sop.Name;
-            baseSOP = sop;
-            baseUUID = sop.UUID;
+        public Displayable(DisplayableRenderable pRenderable, 
+                        string pName, OMV.UUID pUUID,
+                        OMV.Vector3 pOffsetPosition, OMV.Quaternion pOffsetRotation, OMV.Vector3 pScale,
+                        BAttributes pObjectParams, IParameters pParams) : this(pParams) {
+            name = pName;
+            baseUUID = pUUID;
             // If not a root prim, add the offset to the root. 
             // The root Displayable will be zeros (not world position which is in the BInstance).
-            if (!sop.IsRoot) {
-                offsetPosition = baseSOP.OffsetPosition;
-                offsetRotation = baseSOP.RotationOffset;
+            if (pObjectParams.ContainsKey("IsRoot") && (bool)pObjectParams["IsRoot"]) {
+                offsetPosition = pOffsetPosition;
+                offsetRotation = pOffsetRotation;
+
             }
             if (_params.P<bool>("DisplayTimeScaling")) {
-                scale = sop.Scale;
+                scale = pScale;
             }
 
-            attributes.Add("HasSciptsInInventory", sop.Inventory.ContainsScripts());
-            attributes.Add("IsPhysical", (sop.PhysActor != null && sop.PhysActor.IsPhysical));
+            attributes = pObjectParams;
             renderable = pRenderable;
         }
 

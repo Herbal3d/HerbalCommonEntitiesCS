@@ -23,9 +23,21 @@
       <Reference name="Mono.Addins"/>
 
       <Reference name="OpenMetaverse"/>
+      <Reference name="OpenMetaverseTypes" />
+      <Reference name="OpenMetaverse.StructuredData" />
+      <Reference name="OpenMetaverse.Rendering.Meshmerizer" />
+
+      <Reference name="PrimMesher" />
+
+      <Reference name="OpenSim.Framework"/>
+      <Reference name="OpenSim.Region.CoreModules"/>
+      <Reference name="OpenSim.Region.Framework"/>
+      <Reference name="OpenSim.Region.PhysicsModules.SharedBase"/>
+      <Reference name="OpenSim.Services.Interfaces"/>
 
       <Reference name="Herbal3d.CommonEntitiesUtil" />
 
+      <Reference name="CSJ2K" />
       <Reference name="Nini" />
       <Reference name="log4net"/>
 

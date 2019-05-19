@@ -52,10 +52,12 @@ namespace org.herbal3d.cs.CommonEntities {
                 }
                 catch (DirectoryNotFoundException e) {
                     _log.ErrorFormat("{0} DirectoryNotFound exception fetching {1}", _logHeader, pEntityName);
+                    var ee = e; // suppress 'e' not used warning
                     ret = new byte[0];
                 }
                 catch (FileNotFoundException e) {
                     _log.ErrorFormat("{0} FileNotFound exception fetching {1}", _logHeader, pEntityName);
+                    var ee = e; // suppress 'e' not used warning
                     ret = new byte[0];
                 }
                 catch (Exception e) {
@@ -78,10 +80,12 @@ namespace org.herbal3d.cs.CommonEntities {
                 }
                 catch (DirectoryNotFoundException e) {
                     _log.ErrorFormat("{0} DirectoryNotFound exception fetching {1}", _logHeader, pEntityName);
+                    var ee = e; // suppress 'e' not used warning
                     ret = null;
                 }
                 catch (FileNotFoundException e) {
                     _log.ErrorFormat("{0} FileNotFound exception fetching {1}", _logHeader, pEntityName);
+                    var ee = e; // suppress 'e' not used warning
                     ret = null;
                 }
                 catch (Exception e) {

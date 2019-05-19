@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>org.herbal3d.cs.CommonEntitiesConv</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonEntitiesUtil\Herbal3d.CommonEntitiesUtil.csproj" />
+    <ProjectReference Include="..\CommonEntities\Herbal3d.CommonEntities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="OpenMetaverse">
+      <HintPath>..\libs\OpenMetaverse.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenMetaverse.Rendering.Meshmerizer">
+      <HintPath>..\libs\OpenMetaverse.Rendering.Meshmerizer.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenMetaverse.StructuredData">
+      <HintPath>..\libs\OpenMetaverse.StructuredData.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenMetaverseTypes">
+      <HintPath>..\libs\OpenMetaverseTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Framework">
+      <HintPath>..\libs\OpenSim.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Region.CoreModules">
+      <HintPath>..\libs\OpenSim.Region.CoreModules.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Region.Framework">
+      <HintPath>..\libs\OpenSim.Region.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Region.PhysicsModules.SharedBase">
+      <HintPath>..\libs\OpenSim.Region.PhysicsModules.SharedBase.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Services.Interfaces">
+      <HintPath>..\libs\OpenSim.Services.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="PrimMesher">
+      <HintPath>..\libs\PrimMesher.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
