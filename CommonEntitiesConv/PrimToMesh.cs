@@ -32,14 +32,14 @@ using OpenSim.Region.Framework.Scenes;
 namespace org.herbal3d.cs.CommonEntities {
 
     public class PrimToMesh {
-        private OMVR.MeshmerizerR _mesher;
+        private MeshmerizerR _mesher;
         static private readonly String _logHeader = "[PrimToMesh]";
 
         private readonly BLogger _log;
         private readonly IParameters _params;
 
         public PrimToMesh(BLogger pLog, IParameters pParams) {
-            _mesher = new OMVR.MeshmerizerR();
+            _mesher = new MeshmerizerR();
             _log = pLog;
             _params = pParams;
         }
@@ -60,20 +60,29 @@ namespace org.herbal3d.cs.CommonEntities {
                         LogBProgress("{0}: CreateMeshResource: creating mesh", _logHeader);
                         // _tats.numMeshAssets++;
                         var dispable = await MeshFromPrimMeshData(sog, sop, prim, assetManager, lod);
-                        displayable = new Displayable(dispable, CollectObjectAttributes(sop), _params);
+                        displayable = new Displayable(dispable,
+                                                sop.Name, sop.UUID,
+                                                sop.OffsetPosition, sop.RotationOffset, sop.Scale,
+                                                CollectObjectAttributes(sop), _params);
                     }
                     else {
                         LogBProgress("{0}: CreateMeshResource: creating sculpty", _logHeader);
                         // _stats.numSculpties++;
                         var dispable = await MeshFromPrimSculptData(sog, sop, prim, assetManager, lod);
-                        displayable = new Displayable(dispable, CollectObjectAttributes(sop), _params);
+                        displayable = new Displayable(dispable,
+                                                sop.Name, sop.UUID,
+                                                sop.OffsetPosition, sop.RotationOffset, sop.Scale,
+                                                CollectObjectAttributes(sop), _params);
                     }
                 }
                 else {
                     LogBProgress("{0}: CreateMeshResource: creating primshape", _logHeader);
                     // _stats.numSimplePrims++;
                     var dispable = await MeshFromPrimShapeData(sog, sop, prim, assetManager, lod);
-                    displayable = new Displayable(dispable, CollectObjectAttributes(sop), _params);
+                    displayable = new Displayable(dispable,
+                                            sop.Name, sop.UUID,
+                                            sop.OffsetPosition, sop.RotationOffset, sop.Scale,
+                                            CollectObjectAttributes(sop), _params);
                 }
             }
             catch (Exception e) {

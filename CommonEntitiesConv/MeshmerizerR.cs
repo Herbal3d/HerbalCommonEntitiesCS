@@ -38,10 +38,13 @@ using System.IO.Compression;
 
 using OMV = OpenMetaverse;
 using OMVR = OpenMetaverse.Rendering;
+using OpenMetaverse;
+using OpenMetaverse.Rendering;
 
 using OpenMetaverse.StructuredData;
 
-namespace OpenMetaverse.Rendering
+// namespace OpenMetaverse.Rendering
+namespace org.herbal3d.cs.CommonEntities
 {
 // Following pragma added as we don't want to change this file too much so changes
 //      in libOpenMetaverse can be tracked.
@@ -67,7 +70,7 @@ namespace OpenMetaverse.Rendering
                 return null;
 
             SimpleMesh mesh = new SimpleMesh();
-            mesh.Path = new Path();
+            mesh.Path = new OMVR.Path();
             mesh.Prim = prim;
             mesh.Profile = new Profile();
             mesh.Vertices = new List<Vertex>(newPrim.coords.Count);
@@ -565,7 +568,7 @@ namespace OpenMetaverse.Rendering
                     }
                 }
             }
-            catch (Exception e) {
+            catch {
                 // Logger.Log.WarnFormat("{0} exception decoding convex block: {1}", LogHeader, e);
             }
             return hulls;
