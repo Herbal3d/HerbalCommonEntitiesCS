@@ -149,7 +149,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 // 'filteredRenderables' are the DisplayRenderables for all the SOPs in the SOG
                 // Get the root prim of the SOG
                 List<Displayable> rootDisplayableList = filteredRenderables.Where(disp => {
-                    return disp.baseSOP.IsRoot;
+                    return disp.IsRoot;
                 }).ToList();
                 if (rootDisplayableList.Count != 1) {
                     // There should be only one root prim
@@ -164,7 +164,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
                 // Collect all the children prims and add them to the root Displayable
                 rootDisplayable.children = filteredRenderables.Where(disp => {
-                    return !disp.baseSOP.IsRoot;
+                    return !disp.IsRoot;
                     // }).Select(disp => {
                     //     return disp;
                 }).ToList();
