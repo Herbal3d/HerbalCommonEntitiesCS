@@ -113,6 +113,28 @@ namespace org.herbal3d.cs.CommonEntities {
             */
             return handle.GetBHash();
         }
+
+        public T Attribute<T>(string pAttributeName) {
+            T ret = default(T);
+            object val;
+            if (attributes.TryGetValue(pAttributeName, out val)) {
+                try {
+                    ret = (T)val;
+                }
+                catch {
+                    ret = default(T);
+                }
+            }
+            return ret;
+        }
+
+        public bool IsRoot {
+            get {
+                // The 'IsRoot' attribute is from OpenSimulator.
+                // Should this be checking the number of children?
+                return this.Attribute<bool>("IsRoot");
+            }
+        }
     }
 
     /// <summary>
