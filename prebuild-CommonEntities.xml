@@ -23,6 +23,7 @@
       <Reference name="Mono.Addins"/>
 
       <Reference name="OpenMetaverse"/>
+      <Reference name="OpenMetaverseTypes"/>
 
       <Reference name="Herbal3d.CommonEntitiesUtil" />
 
