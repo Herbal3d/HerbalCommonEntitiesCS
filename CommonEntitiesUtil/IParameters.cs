@@ -36,34 +36,11 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
         }
 
         public ParamBlock(Dictionary<string, object> pPreload) {
-            Params = pPreload;
-        }
-
-        public bool HasParam(string pParamName) {
-            return Params.ContainsKey(pParamName.ToLower());
-        }
-
-        // Get the parameter value of the type desired
-        public T P<T>(string pParam) {
-            T ret = default(T);
-            if (Params.TryGetValue(pParam.ToLower(), out object val)) {
-                ret = ConvertTo<T>(val);
+            foreach (var kvp in pPreload) {
+                Add(kvp.Key, kvp.Value);
             }
-            return ret;
         }
 
-        public object GetObjectValue(string pParamName) {
-            object ret = null;
-            Params.TryGetValue(pParamName.ToLower(), out ret);
-            return ret;
-            
-        }
-
-        public ParamBlock Add(string pName, Object pValue) {
-            Params.Add(pName.ToLower(), pValue);
-            return this;
-        }
-        
         // Configuration comes from the configuration file (Config), parameters at
         //    may be set in the context, and parameters that may be required.
         //    This takes those three inputs and creates one parameter block with
@@ -108,6 +85,32 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
                 }
             }
         }
+
+        public bool HasParam(string pParamName) {
+            return Params.ContainsKey(pParamName.ToLower());
+        }
+
+        // Get the parameter value of the type desired
+        public T P<T>(string pParam) {
+            T ret = default(T);
+            if (Params.TryGetValue(pParam.ToLower(), out object val)) {
+                ret = ConvertTo<T>(val);
+            }
+            return ret;
+        }
+
+        public object GetObjectValue(string pParamName) {
+            object ret = null;
+            Params.TryGetValue(pParamName.ToLower(), out ret);
+            return ret;
+            
+        }
+
+        public ParamBlock Add(string pName, Object pValue) {
+            Params.Add(pName.ToLower(), pValue);
+            return this;
+        }
+        
 
         // Cool routine to convert an object to the request type
         // https://stackoverflow.com/questions/3502493/is-there-any-generic-parse-function-that-will-convert-a-string-to-any-type-usi
