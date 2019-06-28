@@ -88,14 +88,17 @@ namespace org.herbal3d.cs.CommonEntities {
             // If not a root prim, add the offset to the root. 
             // The root Displayable will be zeros (not world position which is in the BInstance).
             if (pObjectParams.ContainsKey("IsRoot") && (bool)pObjectParams["IsRoot"]) {
+                offsetPosition = OMV.Vector3.Zero;
+                offsetRotation = OMV.Quaternion.Identity;
+            }
+            else {
                 offsetPosition = pOffsetPosition;
                 offsetRotation = pOffsetRotation;
-
             }
+            // If scaling is to be done by the renderer, copy the prim's scale
             if (_params.P<bool>("DisplayTimeScaling")) {
                 scale = pScale;
             }
-
             attributes = pObjectParams;
             renderable = pRenderable;
         }

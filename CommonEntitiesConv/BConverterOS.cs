@@ -124,14 +124,12 @@ namespace org.herbal3d.cs.CommonEntities {
                 LogBProgress("{0} ConvertSogToInstance: name={1}, id={2}, SOPs={3}",
                             _logHeader, sog.Name, sog.UUID, sog.Parts.Length);
                 // Create meshes for all the parts of the SOG
-                List<Task<Displayable>> convertSOPs = new List<Task<Displayable>>();
-                foreach (var sop in sog.Parts) {
+                renderables = await Task.WhenAll(sog.Parts.Select(sop => {
                     LogBProgress("{0} ConvertSOGToInstance: Calling CreateMeshResource for sog={1}, sop={2}",
                                     _logHeader, sog.UUID, sop.UUID);
                     OMV.Primitive aPrim = sop.Shape.ToOmvPrimitive();
-                    convertSOPs.Add(mesher.CreateMeshResource(sog, sop, aPrim, assetManager, OMVR.DetailLevel.Highest));
-                }
-                renderables = await Task.WhenAll(convertSOPs.ToArray());
+                    return mesher.CreateMeshResource(sog, sop, aPrim, assetManager, OMVR.DetailLevel.Highest);
+                }).ToArray() );
             }
             catch (AggregateException ae) {
                 foreach (var e in ae.InnerExceptions) {
@@ -165,8 +163,6 @@ namespace org.herbal3d.cs.CommonEntities {
                 // Collect all the children prims and add them to the root Displayable
                 rootDisplayable.children = filteredRenderables.Where(disp => {
                     return !disp.IsRoot;
-                    // }).Select(disp => {
-                    //     return disp;
                 }).ToList();
 
                 // Add the Displayable into the collection of known Displayables for instancing
