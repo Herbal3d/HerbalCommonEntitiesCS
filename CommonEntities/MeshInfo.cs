@@ -34,7 +34,10 @@ namespace org.herbal3d.cs.CommonEntities {
         public OMV.Vector3 scale;  // scaling that has been applied to this mesh
         public CoordAxis coordAxis = new CoordAxis(CoordAxis.RightHand_Zup);    // SL coordinates
 
+        // Cache of the hash since it can take a while to compute
         private BHash _hash = null;
+        private int _hashVertCount = -1;
+        private int _hashIndCount = -1;
 
         public MeshInfo() {
             handle = new EntityHandleUUID();
@@ -70,10 +73,17 @@ namespace org.herbal3d.cs.CommonEntities {
         public BHash GetBHash() {
             return GetBHash(false);
         }
+
         public BHash GetBHash(bool force) {
             if (force) _hash = null;
 
-            if (_hash == null) {
+            if (_hash == null
+                        || _hashVertCount != vertexs.Count
+                        || _hashIndCount != indices.Count) {
+
+                _hashVertCount = vertexs.Count;
+                _hashIndCount = indices.Count;
+
                 BHasher hasher = new BHasherMdjb2();
 
                 vertexs.ForEach(vert => {

@@ -707,11 +707,13 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public GltfNode(Gltf pRoot, Displayable pDisplayable, BLogger pLog, IParameters pParams)
-                            : base(pRoot, pDisplayable.baseUUID.ToString() + "_disp", pLog, pParams) {
+                            : base(pRoot, pDisplayable.baseUUID.ToString() + "_node", pLog, pParams) {
+            LogGltf("{0} GltfNode: starting node create. ID={1}, disphash={2}, dispRendHandle={3}",
+                        "Gltf", ID, pDisplayable.GetBHash(), pDisplayable.renderable.handle);
             NodeInit(pRoot);
             InitFromDisplayable(pDisplayable);
-            LogGltf("{0} GltfNode: created from Displayable. ID={1}, pos={2}, rot={3}, mesh={4}, numCh={5}",
-                        "Gltf", ID, translation, rotation, mesh.handle, children.Count);
+            LogGltf("{0} GltfNode: created from Displayable. ID={1}, disphash={2}, pos={3}, rot={4}, mesh={5}, numCh={6}",
+                        "Gltf", ID, pDisplayable.GetBHash(), translation, rotation, mesh.handle, children.Count);
         }
 
         // Base initialization of the node instance
@@ -741,10 +743,13 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // Get an existing instance of a node or create a new one
         public static GltfNode GltfNodeFactory(Gltf pRoot, Displayable pDisplayable, BLogger pLog, IParameters pParams) {
-            if (!pRoot.nodes.TryGetValue(pDisplayable.GetBHash(), out GltfNode node)) {
-                node = new GltfNode(pRoot, pDisplayable, pLog, pParams);
+            BHash displayableHash = pDisplayable.GetBHash();
+            if (!pRoot.nodes.TryGetValue(displayableHash, out GltfNode node)) {
                 // This is the only place we should be creating nodes
-                pRoot.nodes.Add(pDisplayable.GetBHash(), node);
+                node = new GltfNode(pRoot, pDisplayable, pLog, pParams);
+                // This 'if' solved the odd case where we created the node as a child of this node
+                if (!pRoot.nodes.ContainsKey(displayableHash))
+                    pRoot.nodes.Add(displayableHash, node);
             }
             return node;
         }
@@ -824,9 +829,9 @@ namespace org.herbal3d.cs.CommonEntities {
                 });
             }
             BHasher hasher = new BHasherSHA256();
-            primitives.Values.ToList().ForEach(prim => {
+            foreach (var prim in primitives.Values) {
                 hasher.Add(prim.bHash);
-            });
+            };
             bHash = hasher.Finish();
             if (_params.P<bool>("AddUniqueCodes")) {
                 // Add a unique code to the extras section

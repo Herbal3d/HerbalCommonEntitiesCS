@@ -124,7 +124,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 LogBProgress("{0} ConvertSogToInstance: name={1}, id={2}, SOPs={3}",
                             _logHeader, sog.Name, sog.UUID, sog.Parts.Length);
                 // Create meshes for all the parts of the SOG
-                renderables = await Task.WhenAll(sog.Parts.Select(sop => {
+                renderables = await Task.WhenAll( sog.Parts.Select(sop => {
                     LogBProgress("{0} ConvertSOGToInstance: Calling CreateMeshResource for sog={1}, sop={2}",
                                     _logHeader, sog.UUID, sop.UUID);
                     OMV.Primitive aPrim = sop.Shape.ToOmvPrimitive();

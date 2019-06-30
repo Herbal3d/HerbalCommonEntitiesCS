@@ -103,17 +103,12 @@ namespace org.herbal3d.cs.CommonEntities {
             renderable = pRenderable;
         }
 
-        // The hash of a Displayable is the hash of all its meshes
+        // Displayables are unique. They can share meshes, etc but since this is
+        //    an instance at some position, there are not dumplicates.
+        // Also, because of how Displayables are created, all the meshes
+        //    might not be here when a hash is needed.
         public BHash GetBHash() {
-            /*
-            BHasher hasher = new BHasherMdjb2();
-            if (renderable is RenderableMeshGroup meshGroup) {
-                meshGroup.meshes.ForEach(renderableMesh => {
-                    hasher.Add(renderableMesh.mesh.GetBHash().ToULong());
-                });
-            }
-            return hasher.Finish();
-            */
+            // return renderable.GetBHash();   // don't do this
             return handle.GetBHash();
         }
 
@@ -169,9 +164,10 @@ namespace org.herbal3d.cs.CommonEntities {
         // A DisplayableRenderable made of meshes has the hash of all its meshes and materials
         public override BHash GetBHash() {
             BHasher hasher = new BHasherMdjb2();
-            meshes.ForEach(m => {
+            // Order the meshes so hash is the same every time
+            foreach (var m in meshes.OrderBy(m => m.mesh.handle)) {
                 m.GetBHash(hasher);
-            });
+            }
             return hasher.Finish();
         }
     }

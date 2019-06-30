@@ -27,7 +27,7 @@ namespace org.herbal3d.cs.CommonEntities {
     // All filename, type, and version conversions are done here.
     //
     // At the moment, an entity just has a UUID
-    public abstract class EntityHandle : IEqualityComparer<EntityHandle> {
+    public abstract class EntityHandle : IEqualityComparer<EntityHandle>, IComparable {
 
         // System.Object.GetHashCode()
         public override abstract int GetHashCode();
@@ -83,16 +83,10 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // IComparable
         public override int CompareTo(object obj) {
-            int ret = 0;
             if (!(obj is EntityHandleUUID other)) {
                 throw new ArgumentException("CompareTo in EntityHandle: other type not EntityHandle");
             }
-            if (this._uuid != other._uuid) {
-                string thisOne = this._uuid.ToString();
-                string otherOne = this._uuid.ToString();
-                ret = thisOne.CompareTo(otherOne);
-            }
-            return ret;
+            return this._uuid.CompareTo(other._uuid);
         }
 
         // System.Object.GetHashCode()
