@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -121,9 +122,22 @@ namespace org.herbal3d.cs.CommonEntities {
             try {
                 // Get the asset that the sculpty is built on
                 EntityHandleUUID texHandle = new EntityHandleUUID(prim.Sculpt.SculptTexture);
-                var img = await assetManager.OSAssets.FetchTextureAsImage(texHandle);
+                Image img = await assetManager.OSAssets.FetchTextureAsImage(texHandle);
 
-                OMVR.FacetedMesh fMesh = _mesher.GenerateFacetedSculptMesh(prim, img as Bitmap, lod);
+                // If image has transparancy, remove it.
+                // A common thing is to lay a transparency layer over the sculpt texture to make it harder to copy.
+                Bitmap scupltTexture = img as Bitmap;
+                if (Image.IsAlphaPixelFormat(img.PixelFormat)) {
+                    // TODO: There has got to be a quicker way to set the alpha layer to a value
+                    for (int xx = 0; xx < scupltTexture.Width; xx++) {
+                        for (int yy = 0; yy < scupltTexture.Height; yy++) {
+                            Color pix = scupltTexture.GetPixel(xx, yy);
+                            scupltTexture.SetPixel(xx, yy, Color.FromArgb(255, pix.R, pix.G, pix.B));
+                        }
+                    }
+                }
+
+                OMVR.FacetedMesh fMesh = _mesher.GenerateFacetedSculptMesh(prim, scupltTexture, lod);
                 DisplayableRenderable dr =
                         await ConvertFacetedMeshToDisplayable(assetManager, fMesh, prim.Textures.DefaultTexture, prim.Scale);
                 BHash drHash = dr.GetBHash();
