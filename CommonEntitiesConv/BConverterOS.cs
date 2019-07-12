@@ -54,11 +54,9 @@ namespace org.herbal3d.cs.CommonEntities {
             try {
                 // Convert SOGs => BInstances
                 // Create a collection of parallel tasks for the SOG conversions.
-                List<Task<BInstance>> convertAllSOGs = new List<Task<BInstance>>();
-                foreach (var sog in scene.GetSceneObjectGroups()) {
-                    convertAllSOGs.Add(ConvertSogToInstance(sog, assetManager, mesher));
-                }
-                instances = await Task.WhenAll(convertAllSOGs.ToArray());
+                instances = await Task.WhenAll(scene.GetSceneObjectGroups().Select(sog => {
+                    return ConvertSogToInstance(sog, assetManager, mesher);
+                }) );
             }
             catch (AggregateException ae) {
                 foreach (var e in ae.InnerExceptions) {
@@ -80,13 +78,13 @@ namespace org.herbal3d.cs.CommonEntities {
                     _log.DebugFormat("{0} Creating terrain for scene", _logHeader);
                     // instanceList.Add(ConvoarTerrain.CreateTerrainMesh(scene, mesher, assetManager));
                     terrainInstance = await Terrain.CreateTerrainMesh(scene, mesher, assetManager, _log, _params);
-                    CoordAxis.FixCoordinates(terrainInstance, new CoordAxis(CoordAxis.RightHand_Yup | CoordAxis.UVOriginLowerLeft));
+                    CoordAxis.FixCoordinates(terrainInstance, CoordAxis.CoordAxis_Default);
                     instanceList.Add(terrainInstance);
                 }
 
                 // Twist the OpenSimulator Z-up coordinate system to the OpenGL Y-up
                 foreach (var inst in instanceList) {
-                    CoordAxis.FixCoordinates(inst, new CoordAxis(CoordAxis.RightHand_Yup | CoordAxis.UVOriginLowerLeft));
+                    CoordAxis.FixCoordinates(inst, CoordAxis.CoordAxis_Default);
                 }
 
                 // package instances into a BScene
@@ -121,7 +119,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
             Displayable[] renderables = new Displayable[0];
             try {
-                LogBProgress("{0} ConvertSogToInstance: name={1}, id={2}, SOPs={3}",
+                LogBProgress("{0} ConvertSogToInstance: name={1}, id={2}, numSOPs={3}",
                             _logHeader, sog.Name, sog.UUID, sog.Parts.Length);
                 // Create meshes for all the parts of the SOG
                 renderables = await Task.WhenAll( sog.Parts.Select(sop => {

@@ -69,6 +69,8 @@ namespace org.herbal3d.cs.CommonEntities {
             return GetBHash(false);
         }
 
+        // The texture hash is made up of its ID and attributes. This is so
+        // we don't need to read in the texture to compute its hash.
         public BHash GetBHash(bool force) {
             if (force) _hash = null;
 
