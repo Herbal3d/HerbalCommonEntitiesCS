@@ -40,11 +40,11 @@ namespace org.herbal3d.cs.CommonEntities {
         public PersistRules.AssetType AssetType = PersistRules.AssetType.Unknown;
 
         // Return the filename for storing this object. Return null if doesn't store.
-        public string GetFilename(string pLongName) {
+        public virtual string GetFilename(string pLongName) {
             // often UUID's are turned to strings with hyphens. Make sure they are gone.
             return PersistRules.GetFilename(this.AssetType, this.ID, pLongName, _params).Replace("-", "");
         }
-        public string GetURI(string pURIBase, string pStorageName) {
+        public virtual string GetURI(string pURIBase, string pStorageName) {
             return PersistRules.ReferenceURL(pURIBase, pStorageName);
         }
 
@@ -1423,8 +1423,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public void WriteImage(BAssetStorage pStorage) {
-            // string imgFilename = this.GetFilename(underlyingUUID.ToString());
-            string imgFilename = this.GetFilename(imageInfo.GetBHash().ToString());
+            string imgFilename = this.GetFilename();
             var targetType = PersistRules.FigureOutTargetTypeFromAssetType(AssetType, _params);
             using (var stream = new MemoryStream()) {
                 imageInfo.image.Save(stream, PersistRules.TargetTypeToImageFormat[targetType]);
@@ -1433,12 +1432,17 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public override Object AsJSON() {
-            // string imgFilename = this.GetFilename(underlyingUUID.ToString());
-            string imgFilename = this.GetFilename(imageInfo.GetBHash().ToString());
             var ret = new Dictionary<string, Object> {
-                { "uri", PersistRules.ReferenceURL(_params.P<string>("URIBase"), imgFilename) }
+                { "uri", PersistRules.ReferenceURL(_params.P<string>("URIBase"), this.GetFilename()) }
             };
             return ret;
+        }
+
+        // An images filename includes size info
+        public string GetFilename() {
+            // return base.GetFilename(String.Format("{0}_{1}_{2}", underlyingUUID, imageInfo.xSize, imageInfo.ySize));
+            return base.GetFilename(
+                    String.Format("{0}_{1}_{2}", imageInfo.GetBHash(), imageInfo.xSize, imageInfo.ySize));
         }
     }
 
