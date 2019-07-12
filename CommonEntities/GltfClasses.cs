@@ -958,6 +958,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public float? emission;           // light emitted by surface (OMV.Vector4 or textureID)
         public float? specular;           // color reflected by surface (OMV.Vector4 or textureID)
         public float? shininess;          // specular reflection from surface (float)
+        public float? glow;               // glow to add to the surface (float)
         public float? transparency;       // transparency of surface (float)
         public bool? transparent;         // whether the surface has transparency ('true' or 'false;)
 
@@ -983,7 +984,11 @@ namespace org.herbal3d.cs.CommonEntities {
                 doubleSided = _params.P<bool>("DoubleSided");
             }
             if (matInfo.shiny != OMV.Shininess.None) {
-                shininess = (float)matInfo.shiny / 256f;
+                shininess = Util.Clamp((float)matInfo.shiny / 256f, 0f, 1f);
+            }
+
+            if (matInfo.glow != 0f) {
+                glow = Util.Clamp(matInfo.glow, 0f, 1f);
             }
 
             if (matInfo.image != null) {
@@ -1108,6 +1113,9 @@ namespace org.herbal3d.cs.CommonEntities {
             else {
                 // if no shineess is specified, this is not a metal
                 pbr.Add("metallicFactor", 0f);
+            }
+            if (glow.HasValue) {
+                pbr.Add("emissiveFactor", new OMV.Vector3(glow.Value, glow.Value, glow.Value));
             }
             if (pbr.Count > 0)
                 topLevelValues.Add("pbrMetallicRoughness", pbr);
