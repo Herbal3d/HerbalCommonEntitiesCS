@@ -19,7 +19,6 @@
       <Reference name="System.Drawing"/>
       <Reference name="System.Net.Http"/>
       <Reference name="System.Reflection"/>
-      <Reference name="System.XML"/>
       <Reference name="Mono.Addins"/>
 
       <Reference name="OpenMetaverse"/>
