@@ -17,6 +17,8 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.IO;
 
 using OMV = OpenMetaverse;
 
@@ -141,8 +143,12 @@ namespace org.herbal3d.cs.CommonEntities {
         public void ComputeImageHash() {
             BHasher hasher = new BHasherSHA256();
             if (image != null) {
-                ImageConverter converter = new ImageConverter();
-                byte[] data = (byte[])converter.ConvertTo(image, typeof(byte[]));
+                // ImageConverter is not available in .NET Core
+                // ImageConverter converter = new ImageConverter();
+                // byte[] data = (byte[])converter.ConvertTo(image, typeof(byte[]));
+                MemoryStream ms = new MemoryStream();
+                image.Save(ms, ImageFormat.Png);
+                byte[] data = ms.ToArray();
                 _imageHash = hasher.Finish(data, 0, data.Length);
             }
             else {
