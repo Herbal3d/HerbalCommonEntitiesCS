@@ -1,16 +1,44 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A260EF90-D948-470A-A043-9C016A367DC2}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <RootNamespace>org.herbal3d.cs.CommonEntitiesConv</RootNamespace>
+    <AssemblyName>Herbal3d.CommonEntitiesConv</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CommonEntitiesUtil\Herbal3d.CommonEntitiesUtil.csproj" />
-    <ProjectReference Include="..\CommonEntities\Herbal3d.CommonEntities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\libs\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Nini">
+      <HintPath>..\libs\Nini.dll</HintPath>
+    </Reference>
     <Reference Include="OpenMetaverse">
       <HintPath>..\libs\OpenMetaverse.dll</HintPath>
     </Reference>
@@ -41,6 +69,32 @@
     <Reference Include="PrimMesher">
       <HintPath>..\libs\PrimMesher.dll</HintPath>
     </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
-
+  <ItemGroup>
+    <Compile Include="AssetManager.cs" />
+    <Compile Include="BConverterOS.cs" />
+    <Compile Include="MemAssetService.cs" />
+    <Compile Include="MeshmerizerR.cs" />
+    <Compile Include="OSAssetFetcher.cs" />
+    <Compile Include="PrimToMesh.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Terrain.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CommonEntitiesUtil\Herbal3d.CommonEntitiesUtil.csproj">
+      <Project>{a9d65554-0000-0000-0000-000000000000}</Project>
+      <Name>Herbal3d.CommonEntitiesUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonEntities\Herbal3d.CommonEntities.csproj">
+      <Project>{f0f6d547-dcb2-4bd6-8978-b204361c2061}</Project>
+      <Name>Herbal3d.CommonEntities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
