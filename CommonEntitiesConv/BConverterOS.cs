@@ -103,7 +103,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 bScene.attributes.Add("WorldLocX", ri.WorldLocX);
                 bScene.attributes.Add("WorldLocY", ri.WorldLocY);
                 bScene.attributes.Add("WaterHeight", ri.RegionSettings.WaterHeight);
-                bScene.attributes.Add("DefaultLandingPorint", ri.DefaultLandingPoint);
+                bScene.attributes.Add("DefaultLandingPoint", ri.DefaultLandingPoint);
             }
             catch (Exception e) {
                 _log.ErrorFormat("{0} failed SOG conversion: {1}", _logHeader, e);
