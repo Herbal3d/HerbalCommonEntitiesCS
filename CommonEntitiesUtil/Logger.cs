@@ -17,6 +17,7 @@ using System;
 using System.Reflection;
 
 using log4net;
+using log4net.Config;
 
 namespace org.herbal3d.cs.CommonEntitiesUtil {
 
@@ -29,7 +30,12 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
     }
 
     public class LoggerConsole : BLogger {
-        private static readonly ILog _log = LogManager.GetLogger("LoggerConsole");
+
+        private ILog _log;
+        public LoggerConsole() {
+            log4net.Config.XmlConfigurator.Configure();
+            _log = LogManager.GetLogger("LoggerConsole");
+        }
 
         private bool _verbose = false;
         public override void SetVerbose(bool value) {
@@ -63,6 +69,7 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
         private ILog _log;
 
         public LoggerLog4Net() {
+            log4net.Config.XmlConfigurator.Configure();
             _log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         }
 
