@@ -42,7 +42,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public async Task<BScene> ConvertRegionToBScene(Scene scene, AssetManager assetManager) {
-            BScene bScene = null;
+            BScene bScene;
 
             // Convert SOGs from OAR into EntityGroups
             // _log.Log("Num assets = {0}", assetService.NumAssets);
@@ -50,21 +50,17 @@ namespace org.herbal3d.cs.CommonEntities {
 
             PrimToMesh mesher = new PrimToMesh(_log, _params);
 
-            BInstance[] instances = new BInstance[0];
-            try {
-                // Convert SOGs => BInstances
-                // Create a collection of parallel tasks for the SOG conversions.
-                instances = await Task.WhenAll(scene.GetSceneObjectGroups().Select(sog => {
-                    return ConvertSogToInstance(sog, assetManager, mesher);
-                }) );
-            }
-            catch (AggregateException ae) {
-                foreach (var e in ae.InnerExceptions) {
+            // Convert SOGs => BInstances
+            // Create a collection of parallel tasks for the SOG conversions.
+            List<BInstance> instances = new List<BInstance>();
+            foreach (var sog in scene.GetSceneObjectGroups()) {
+                try {
+                    BInstance binst = await ConvertSogToInstance(sog, assetManager, mesher);
+                    instances.Add(binst);
+                }
+                catch (Exception e) {
                     _log.ErrorFormat("Convert SOGs exception: {0}", e);
                 }
-            }
-            catch (Exception e) {
-                _log.ErrorFormat("Convert SOGs exception: {0}", e);
             }
 
             try {
@@ -185,7 +181,6 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         private void DumpInstance(BInstance inst) {
-            Displayable instDisplayable = inst.Representation;
             LogBProgress("{0} created instance. handle={1}, pos={2}, rot={3}",
                 _logHeader, inst.handle, inst.Position, inst.Rotation);
             DumpDisplayable(inst.Representation, "Representation", 0);
