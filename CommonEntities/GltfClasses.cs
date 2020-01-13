@@ -42,7 +42,8 @@ namespace org.herbal3d.cs.CommonEntities {
         // Return the filename for storing this object. Return null if doesn't store.
         public virtual string GetFilename(string pLongName) {
             // often UUID's are turned to strings with hyphens. Make sure they are gone.
-            return PersistRules.GetFilename(this.AssetType, this.ID, pLongName, _params).Replace("-", "");
+            // return PersistRules.GetFilename(this.AssetType, this.ID, pLongName, _params).Replace("-", "");
+            return PersistRules.GetFilename(this.AssetType, this.ID, pLongName, _params);
         }
         public virtual string GetURI(string pURIBase, string pStorageName) {
             return PersistRules.ReferenceURL(pURIBase, pStorageName);
