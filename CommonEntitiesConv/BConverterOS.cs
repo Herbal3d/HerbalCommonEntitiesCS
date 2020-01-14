@@ -113,25 +113,20 @@ namespace org.herbal3d.cs.CommonEntities {
         public async Task<BInstance> ConvertSogToInstance(SceneObjectGroup sog, AssetManager assetManager, PrimToMesh mesher) {
             BInstance ret = null;
 
-            Displayable[] renderables = new Displayable[0];
-            try {
-                LogBProgress("{0} ConvertSogToInstance: name={1}, id={2}, numSOPs={3}",
-                            _logHeader, sog.Name, sog.UUID, sog.Parts.Length);
-                // Create meshes for all the parts of the SOG
-                renderables = await Task.WhenAll( sog.Parts.Select(sop => {
-                    LogBProgress("{0} ConvertSOGToInstance: Calling CreateMeshResource for sog={1}, sop={2}",
-                                    _logHeader, sog.UUID, sop.UUID);
-                    OMV.Primitive aPrim = sop.Shape.ToOmvPrimitive();
-                    return mesher.CreateMeshResource(sog, sop, aPrim, assetManager, OMVR.DetailLevel.Highest);
-                }).ToArray() );
-            }
-            catch (AggregateException ae) {
-                foreach (var e in ae.InnerExceptions) {
+            List<Displayable> renderables = new List<Displayable>();
+            LogBProgress("{0} ConvertSogToInstance: name={1}, id={2}, numSOPs={3}",
+                        _logHeader, sog.Name, sog.UUID, sog.Parts.Length);
+            // Create meshes for all the parts of the SOG
+            foreach (var sop in sog.Parts) {
+                LogBProgress("{0} ConvertSOGToInstance: Calling CreateMeshResource for sog={1}, sop={2}",
+                                _logHeader, sog.UUID, sop.UUID);
+                OMV.Primitive aPrim = sop.Shape.ToOmvPrimitive();
+                try {
+                    renderables.Add(await mesher.CreateMeshResource(sog, sop, aPrim, assetManager, OMVR.DetailLevel.Highest));
+                }
+                catch (Exception e) {
                     _log.ErrorFormat("ConvertSogToInstance: exception: {0}", e);
                 }
-            }
-            catch (Exception e) {
-                _log.ErrorFormat("ConvertSogToInstance: exception: {0}", e);
             }
 
             try {

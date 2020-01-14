@@ -212,11 +212,16 @@ namespace org.herbal3d.cs.CommonEntities {
         private async Task<DisplayableRenderable> ConvertFacetedMeshToDisplayable(AssetManager assetManager, OMVR.FacetedMesh fmesh,
                         OMV.Primitive.TextureEntryFace defaultTexture, OMV.Vector3 primScale) {
             RenderableMeshGroup ret = new RenderableMeshGroup();
-            ret.meshes.AddRange(await Task.WhenAll(
-                fmesh.Faces.Where(face => face.Indices.Count > 0).Select(face => {
-                    return ConvertFaceToRenderableMesh(face, assetManager, defaultTexture, primScale);
-                })
-            ) );
+            foreach (var face in fmesh.Faces) {
+                if (face.Indices.Count > 0) {
+                    try {
+                        ret.meshes.Add(await ConvertFaceToRenderableMesh(face, assetManager, defaultTexture, primScale));
+                    }
+                    catch (Exception e) {
+                        _log.ErrorFormat("{0} ConvertFacetedMeshToDisplayable: exception: {1}", _logHeader, e);
+                    }
+                }
+            }
             // _log.DebugFormat("{0} ConvertFacetedMeshToDisplayable: complete. numMeshes={1}", _logHeader, ret.meshes.Count);
             return ret;
         }

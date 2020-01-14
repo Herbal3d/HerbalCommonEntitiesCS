@@ -289,7 +289,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 }).ToList() );
             }
             catch (Exception e) {
-                _log.DebugFormat("{0} MergeShareMaterialHashes: exception: {1}", _logHeader, e);
+                _log.ErrorFormat("{0} MergeShareMaterialHashes: exception: {1}", _logHeader, e);
             }
 
             return ret;
