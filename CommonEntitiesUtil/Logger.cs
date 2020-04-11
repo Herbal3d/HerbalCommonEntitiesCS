@@ -31,10 +31,9 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
 
     public class LoggerConsole : BLogger {
 
-        private ILog _log;
         public LoggerConsole() {
-            log4net.Config.XmlConfigurator.Configure();
-            _log = LogManager.GetLogger("LoggerConsole");
+            // log4net.Config.XmlConfigurator.Configure();
+            // _log = LogManager.GetLogger("LoggerConsole");
         }
 
         private bool _verbose = false;
