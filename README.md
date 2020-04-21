@@ -48,6 +48,11 @@ interface. The expected parameters and values are:
 | LogBuilding | Bool | Output infomation about building
 | LogGltfBuilding | Bool | Output information about Gltf creation
 
+## Revisions
+
+| 1.0.0 | Initial version
+| 2.0.1 | Converted to new packaging and new Basil protocol
+
 
 [OpenSimulator]: http://opensimulator.org/
 [Convoar]: https://github.com/Misterblue/convoar
