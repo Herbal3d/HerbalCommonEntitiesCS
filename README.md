@@ -52,6 +52,7 @@ interface. The expected parameters and values are:
 
 | 1.0.0 | Initial version
 | 2.0.1 | Converted to new packaging and new Basil protocol
+| 2.1.1 | Project GUIDs changed. CommonEntitiesUtil changed to .NETStandard2.0.
 
 
 [OpenSimulator]: http://opensimulator.org/
