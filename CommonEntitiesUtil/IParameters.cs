@@ -26,6 +26,7 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
         T P<T>(string pParamName);
         object GetObjectValue(string pParamName);
         bool HasParam(string pParamName);
+        void Remove(string pParamName);
     }
 
     public class ParamBlock : IParameters {
@@ -110,6 +111,13 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
             Params.Add(pName.ToLower(), pValue);
             return this;
         }
+
+        public void Remove(string pName) {
+            string pNameLower = pName.ToLower();
+            if (Params.ContainsKey(pNameLower)) {
+                Params.Remove(pNameLower);
+            }
+        }
         
 
         // Cool routine to convert an object to the request type
@@ -127,7 +135,12 @@ namespace org.herbal3d.cs.CommonEntitiesUtil {
                         ret = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFrom(val);
                     }
                     else {
-                        ret = (T)Convert.ChangeType(val, typeof(T));
+                        if (val.GetType().GetMethod("ConvertTo") != null) {
+                            ret = (T)val.GetType().GetMethod("ConvertTo").Invoke(val, new object[] { typeof(T) });
+                        }
+                        else {
+                            ret = (T)Convert.ChangeType(val, typeof(T));
+                        }
                     }
                 }
                 catch (Exception) {
