@@ -200,7 +200,8 @@ namespace org.herbal3d.cs.CommonEntities {
             return pPos * coordTransformQZupToYup;
         }
         public static OMV.Quaternion ConvertZupToYup(OMV.Quaternion pRot) {
-            return pRot * coordTransformQZupToYup;
+            // return pRot * coordTransformQZupToYup;
+            return coordTransformQZupToYup * pRot;
         }
 
     }
