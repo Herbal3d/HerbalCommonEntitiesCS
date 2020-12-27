@@ -55,8 +55,7 @@ namespace org.herbal3d.cs.CommonEntities
 
         // IAssetService.Get
         public AssetBase Get(string id) {
-            AssetBase ret = null;
-            assets.TryGetValue(id, out ret);
+            assets.TryGetValue(id, out AssetBase ret);
             return ret;
         }
 
@@ -65,6 +64,12 @@ namespace org.herbal3d.cs.CommonEntities
             AssetBase asset = this.Get(id);
             handler(id, sender, asset);
             return (asset != null);
+        }
+
+        // IAssetService.Get
+        public AssetBase Get(string id, string foreignAssetService, bool storeOnLocalGrid) {
+            assets.TryGetValue(id, out AssetBase ret);
+            return ret;
         }
 
         // IAssetService.GetCached
@@ -76,8 +81,7 @@ namespace org.herbal3d.cs.CommonEntities
         // IAssetService.GetData
         public byte[] GetData(string id) {
             byte[] ret = null;
-            AssetBase asset = null;
-            assets.TryGetValue(id, out asset);
+            assets.TryGetValue(id, out AssetBase asset);
             if (asset != null) {
                 ret = asset.Data;
             }
@@ -87,8 +91,7 @@ namespace org.herbal3d.cs.CommonEntities
         // IAssetService.GetMetadata
         public AssetMetadata GetMetadata(string id) {
             AssetMetadata ret = null;
-            AssetBase asset = null;
-            assets.TryGetValue(id, out asset);
+            assets.TryGetValue(id, out AssetBase asset);
             if (asset != null) {
                 ret = asset.Metadata;
             }
@@ -107,11 +110,12 @@ namespace org.herbal3d.cs.CommonEntities
             }
             else {
                 if (asset.FullID == OMV.UUID.Zero) {
-                    OMV.UUID uuid = OMV.UUID.Zero;
-                    if (OMV.UUID.TryParse(asset.ID, out uuid)) {
+                    if (OMV.UUID.TryParse(asset.ID, out OMV.UUID uuid))
+                    {
                         asset.FullID = uuid;
                     }
-                    else {
+                    else
+                    {
                         asset.FullID = OMV.UUID.Random();
                         id = asset.FullID.ToString();
                     }
@@ -126,8 +130,7 @@ namespace org.herbal3d.cs.CommonEntities
         // IAssetService.UpdateContent
         public bool UpdateContent(string id, byte[] data) {
             bool ret = false;
-            AssetBase asset = null;
-            assets.TryGetValue(id, out asset);
+            assets.TryGetValue(id, out AssetBase asset);
             if (asset != null) {
                 asset.Data = data;
                 ret = true;
