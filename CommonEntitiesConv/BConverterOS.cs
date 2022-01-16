@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 using OpenSim.Framework;
 using OpenSim.Region.Framework.Scenes;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 using OMV = OpenMetaverse;
 using OMVR = OpenMetaverse.Rendering;
@@ -33,10 +33,10 @@ namespace org.herbal3d.cs.CommonEntities {
     public class BConverterOS {
         private static readonly string _logHeader = "[BConverterOS]";
 
-        private readonly BLogger _log;
+        private readonly IBLogger _log;
         private readonly IParameters _params;
 
-        public BConverterOS(BLogger pLog, IParameters pParams) {
+        public BConverterOS(IBLogger pLog, IParameters pParams) {
             _log = pLog;
             _params = pParams;
         }
@@ -59,19 +59,19 @@ namespace org.herbal3d.cs.CommonEntities {
                     instances.Add(binst);
                 }
                 catch (Exception e) {
-                    _log.ErrorFormat("Convert SOGs exception: {0}", e);
+                    _log.Error("Convert SOGs exception: {0}", e);
                 }
             }
 
             try {
-                _log.DebugFormat("{0} Num instances = {1}", _logHeader, instances.ToList().Count);
+                _log.Debug("{0} Num instances = {1}", _logHeader, instances.ToList().Count);
                 List<BInstance> instanceList = new List<BInstance>();
                 instanceList.AddRange(instances);
 
                 // Add the terrain mesh to the scene
                 BInstance terrainInstance = null;
                 if (_params.P<bool>("AddTerrainMesh")) {
-                    _log.DebugFormat("{0} Creating terrain for scene", _logHeader);
+                    _log.Debug("{0} Creating terrain for scene", _logHeader);
                     // instanceList.Add(ConvoarTerrain.CreateTerrainMesh(scene, mesher, assetManager));
                     terrainInstance = await Terrain.CreateTerrainMesh(scene, mesher, assetManager, _log, _params);
                     CoordAxis.FixCoordinates(terrainInstance, CoordAxis.CoordAxis_Default);
@@ -102,7 +102,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 bScene.attributes.Add("DefaultLandingPoint", ri.DefaultLandingPoint);
             }
             catch (Exception e) {
-                _log.ErrorFormat("{0} failed SOG conversion: {1}", _logHeader, e);
+                _log.Error("{0} failed SOG conversion: {1}", _logHeader, e);
                 throw new Exception(String.Format("Failed conversion: {0}", e));
             }
 
@@ -125,7 +125,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     renderables.Add(await mesher.CreateMeshResource(sog, sop, aPrim, assetManager, OMVR.DetailLevel.Highest));
                 }
                 catch (Exception e) {
-                    _log.ErrorFormat("ConvertSogToInstance: exception: {0}", e);
+                    _log.Error("ConvertSogToInstance: exception: {0}", e);
                 }
             }
 
@@ -142,7 +142,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     // There should be only one root prim
                     string errorMsg = String.Format("{0} ConvertSOGToInstance: Found not one root prim in SOG. ID={1}, numRoots={2}",
                                 _logHeader, sog.UUID, rootDisplayableList.Count);
-                    _log.ErrorFormat(errorMsg);
+                    _log.Error(errorMsg);
                     throw new Exception(errorMsg);
                 }
 
@@ -169,7 +169,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 }
             }
             catch (Exception e) {
-                 _log.ErrorFormat("{0} Failed meshing of SOG. ID={1}: {2}", _logHeader, sog.UUID, e);
+                 _log.Error("{0} Failed meshing of SOG. ID={1}: {2}", _logHeader, sog.UUID, e);
                  throw new Exception(String.Format("failed meshing of SOG. ID={0}: {1}", sog.UUID, e));
             }
             return ret;
@@ -199,7 +199,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
         public void LogBProgress(string msg, params Object[] args) {
             if (_params.P<bool>("LogBuilding")) {
-                _log.Log(msg, args);
+                _log.Debug(msg, args);
             }
         }
     }

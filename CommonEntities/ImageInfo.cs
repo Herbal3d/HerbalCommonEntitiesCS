@@ -22,7 +22,7 @@ using System.IO;
 
 using OMV = OpenMetaverse;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 namespace org.herbal3d.cs.CommonEntities {
 
@@ -40,13 +40,13 @@ namespace org.herbal3d.cs.CommonEntities {
 #pragma warning disable 414
         private readonly string _logHeader = "[ImageInfo]";
 #pragma warning restore 414
-        private readonly BLogger _log;
+        private readonly IBLogger _log;
         private readonly IParameters _params;
 
-        public ImageInfo(BLogger pLog, IParameters pParams) : this(new EntityHandleUUID(), pLog, pParams ){
+        public ImageInfo(IBLogger pLog, IParameters pParams) : this(new EntityHandleUUID(), pLog, pParams ){
         }
 
-        public ImageInfo(EntityHandle pHandle, BLogger pLog, IParameters pParams) {
+        public ImageInfo(EntityHandle pHandle, IBLogger pLog, IParameters pParams) {
             handle = pHandle;
             imageIdentifier = handle.GetUUID(); // image is unique unless underlying set
             _log = pLog;

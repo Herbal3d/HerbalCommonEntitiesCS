@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 
 using OMV = OpenMetaverse;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 namespace org.herbal3d.cs.CommonEntities {
     public class BAssets {
@@ -28,10 +28,10 @@ namespace org.herbal3d.cs.CommonEntities {
         private static readonly string _logHeader = "[AssetFetcher]";
 #pragma warning restore 414
 
-        protected readonly BLogger _log;
+        protected readonly IBLogger _log;
         protected readonly IParameters _params;
 
-        public BAssets(BLogger pLog, IParameters pParam) {
+        public BAssets(IBLogger pLog, IParameters pParam) {
             _log = pLog;
             _params = pParam;
             Displayables = new Dictionary<BHash, Displayable>();
@@ -99,7 +99,7 @@ namespace org.herbal3d.cs.CommonEntities {
                         }
                     }
                     catch (Exception e) {
-                        _log.ErrorFormat("{0} GetRenderable: builder exception: {1}", _logHeader, e);
+                        _log.Error("{0} GetRenderable: builder exception: {1}", _logHeader, e);
                     }
                     Renderables.Add(hash, renderable);
                 }
@@ -134,8 +134,8 @@ namespace org.herbal3d.cs.CommonEntities {
                         Meshes.Add(hash, meshInfo.handle, meshInfo);
                         // Assert the hash we're indexing it under is the one in meshInfo
                         if (!hash.Equals(meshInfo.GetBHash())) {
-                            _log.ErrorFormat( "AssetFetcher.GetMeshInfo: adding mesh with different hash!");
-                            _log.ErrorFormat( "AssetFetcher.GetMeshInfo: meshInfo.handle={0}, passed hash={1}, meshInfo.hash={2}",
+                            _log.Error( "AssetFetcher.GetMeshInfo: adding mesh with different hash!");
+                            _log.Error( "AssetFetcher.GetMeshInfo: meshInfo.handle={0}, passed hash={1}, meshInfo.hash={2}",
                                         meshInfo.handle, hash.ToString(), meshInfo.GetBHash().ToString());
                         }
                     }

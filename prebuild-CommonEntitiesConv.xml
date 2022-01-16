@@ -1,4 +1,4 @@
-    <Project frameworkVersion="v4_6" name="Herbal3d.CommonEntitiesConv" path="addon-modules/HerbalCommonEntitiesCS/CommonEntitiesConv" type="Library">
+    <Project frameworkVersion="v4_8" name="Herbal3d.CommonEntitiesConv" path="addon-modules/HerbalCommonEntitiesCS/CommonEntitiesConv" type="Library">
       <Configuration name="Debug">
         <Options>
           <OutputPath>../../../bin/</OutputPath>
@@ -35,7 +35,7 @@
       <Reference name="OpenSim.Services.Interfaces"/>
 
       <Reference name="Herbal3d.CommonEntities" />
-      <Reference name="Herbal3d.CommonEntitiesUtil" />
+      <Reference name="Herbal3d.CommonUtil" />
 
       <Reference name="CSJ2K" />
       <Reference name="Nini" />

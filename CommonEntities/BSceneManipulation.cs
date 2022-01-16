@@ -20,7 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 using OMV = OpenMetaverse;
 using OMVR = OpenMetaverse.Rendering;
@@ -54,14 +54,14 @@ namespace org.herbal3d.cs.CommonEntities {
                 // Any shared meshes have been gathered into instances in 'newInstances'
                 //     and the meshes have been removed from the shared materials in the analysis.
                 int instancesAdded = newInstances.Count - lastInstanceCount;
-                _log.DebugFormat("{0} OptimizeScene: BInstances added by mesh instances = {1}", _logHeader, instancesAdded);
+                _log.Debug("{0} OptimizeScene: BInstances added by mesh instances = {1}", _logHeader, instancesAdded);
 
                 lastInstanceCount = newInstances.Count;
                 if (_params.P<bool>("MergeSharedMaterialMeshes")) {
                     newInstances.AddRange(MergeSharedMaterialMeshes(bScene, analysis));
                 }
                 instancesAdded = newInstances.Count - lastInstanceCount;
-                _log.DebugFormat("{0} OptimizeScene: BInstances added by material sharing = {1}", _logHeader, instancesAdded);
+                _log.Debug("{0} OptimizeScene: BInstances added by material sharing = {1}", _logHeader, instancesAdded);
             }
 
             return bScene;
@@ -163,7 +163,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 foreach (InvertedMesh imesh in meshList) {
                     BHash materialHash = imesh.renderableMesh.material.GetBHash();
                     if (!meshByMaterial[materialHash].Remove(imesh)) {
-                        _log.DebugFormat("{0} RemoveMeshesFromMaterials: couldn't remove imesh. matHash={1}",
+                        _log.Debug("{0} RemoveMeshesFromMaterials: couldn't remove imesh. matHash={1}",
                                 _logHeader, materialHash);
                     }
                 }
@@ -174,7 +174,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 foreach (InvertedMesh imesh in meshList) {
                     BHash shapeHash = imesh.renderableMesh.mesh.GetBHash();
                     if (!sharedMeshes[shapeHash].Remove(imesh)) {
-                        _log.DebugFormat("{0} RemoveMeshesFromShared: couldn't remove imesh. shapeHash={1}",
+                        _log.Debug("{0} RemoveMeshesFromShared: couldn't remove imesh. shapeHash={1}",
                                 _logHeader, shapeHash);
                     }
                 }
@@ -185,7 +185,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 foreach (InvertedMesh imesh in meshList) {
                     if (imesh.containingDisplayableRenderable is RenderableMeshGroup renderableMeshGroup) {
                         if (!renderableMeshGroup.meshes.Remove(imesh.renderableMesh)) {
-                            _log.DebugFormat("{0} RemoveMeshesFromScene: couldn't remove imesh.",
+                            _log.Debug("{0} RemoveMeshesFromScene: couldn't remove imesh.",
                                     _logHeader);
                             return;
                         }
@@ -243,19 +243,19 @@ namespace org.herbal3d.cs.CommonEntities {
                 //    in one instance.
                 // Note: the 'SelectMany' is used to flatten the list of lists
                 int meshShareThreshold = _params.P<int>("MeshShareThreshold");
-                _log.DebugFormat("{0} SeparateMeshes: Separating instanced meshes. threshold={1}",
+                _log.Debug("{0} SeparateMeshes: Separating instanced meshes. threshold={1}",
                             _logHeader, meshShareThreshold);
 
                 /*
                 foreach (BHash key in analysis.sharedMeshes.Keys) {     // DEBUG DEBUG
-                    _log.DebugFormat("{0} SeparateMeshes: mesh hash {1} . meshes={2}",       // DEBUG DEBUG
+                    _log.Debug("{0} SeparateMeshes: mesh hash {1} . meshes={2}",       // DEBUG DEBUG
                             _logHeader, key, analysis.sharedMeshes[key].Count);     // DEBUG DEBUG
                 };      // DEBUG DEBUG
                 */
 
                 ret.AddRange(analysis.sharedMeshes.Values.Where(val => val.Count > meshShareThreshold).SelectMany(meshList => {
                     // Creates Instances for the shared messes in this list and also takes the meshes out of 'meshByMaterial'
-                    _log.DebugFormat("{0} MergeSharedMaterialMeshes: shared mesh hash: {1}/{2}, cnt={3}",
+                    _log.Debug("{0} MergeSharedMaterialMeshes: shared mesh hash: {1}/{2}, cnt={3}",
                             _logHeader, meshList.First().renderableMesh.mesh.GetBHash(),
                             meshList.First().renderableMesh.material.GetBHash(),
                             meshList.Count);
@@ -265,7 +265,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 }).ToList() );
             }
             catch (Exception e) {
-                _log.DebugFormat("{0} SeparateMeshInstances: exception: {1}", _logHeader, e);
+                _log.Debug("{0} SeparateMeshInstances: exception: {1}", _logHeader, e);
             }
 
             return ret;
@@ -278,18 +278,18 @@ namespace org.herbal3d.cs.CommonEntities {
             try {
                 // 'analysis.meshByMaterial' has all meshes/instances grouped by material used
                 // 'analysis.sharedMeshes' has all meshes grouped by the mesh
-                _log.DebugFormat("{0} MergeShareMaterialHashes: number of materials = {1}",
+                _log.Debug("{0} MergeShareMaterialHashes: number of materials = {1}",
                                     _logHeader, analysis.meshByMaterial.Count);
 
                 // Merge the meshes and create an Instance containing the new mesh set
                 ret.AddRange(analysis.meshByMaterial.Keys.SelectMany(materialHash => {
-                    _log.DebugFormat("{0} MergeShareMaterialHashes: material hash {1} . meshes={2}",
+                    _log.Debug("{0} MergeShareMaterialHashes: material hash {1} . meshes={2}",
                                 _logHeader, materialHash, analysis.meshByMaterial[materialHash].Count);
                     return CreateInstancesFromSharedMaterialMeshes(materialHash, analysis.meshByMaterial[materialHash]);
                 }).ToList() );
             }
             catch (Exception e) {
-                _log.ErrorFormat("{0} MergeShareMaterialHashes: exception: {1}", _logHeader, e);
+                _log.Error("{0} MergeShareMaterialHashes: exception: {1}", _logHeader, e);
             }
 
             return ret;
@@ -373,7 +373,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 inst.Representation = displayable;
             }
             catch (Exception e) {
-                _log.ErrorFormat("{0} CreateInstanceFromSharedMaterialMeshes: exception: {1}", _logHeader, e);
+                _log.Error("{0} CreateInstanceFromSharedMaterialMeshes: exception: {1}", _logHeader, e);
             }
 
             return inst;
@@ -409,7 +409,7 @@ namespace org.herbal3d.cs.CommonEntities {
         private List<Displayable> PackMeshesIntoDisplayables(List<InvertedMesh> meshList, OMV.Vector3 gPos, CreateNameFunc createName) {
             return meshList.Select(imesh => {
                 /*
-                _log.DebugFormat("{0} CreateInstanceForSharedMeshes: hash={1}, instPos={2}, dispPos={3}, numVerts={4}",
+                _log.Debug("{0} CreateInstanceForSharedMeshes: hash={1}, instPos={2}, dispPos={3}, numVerts={4}",
                                 _logHeader, imesh.renderableMesh.mesh.GetBHash(),
                                 imesh.containingInstance.Position,
                                 imesh.containingDisplayable.offsetPosition,

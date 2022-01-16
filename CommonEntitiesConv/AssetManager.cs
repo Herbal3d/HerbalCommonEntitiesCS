@@ -19,21 +19,21 @@ using System.Collections.Generic;
 
 using OpenSim.Services.Interfaces;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 namespace org.herbal3d.cs.CommonEntities {
     public class AssetManager : IDisposable {
     #pragma warning disable 414
         private readonly string _logHeader = "[AssetManager]";
     #pragma warning restore 414
-        protected readonly BLogger _log;
+        protected readonly IBLogger _log;
         protected readonly IParameters _params;
 
         public OSAssetFetcher OSAssets;
         public BAssets Assets;
         public BAssetStorage AssetStorage;
 
-        public AssetManager(IAssetService pAssetService, BLogger pLog, IParameters pParam) {
+        public AssetManager(IAssetService pAssetService, IBLogger pLog, IParameters pParam) {
             _log = pLog;
             _params = pParam;
             OSAssets = new OSAssetFetcher(pAssetService, pLog, pParam);

@@ -21,7 +21,7 @@ using System.Threading.Tasks;
 
 using OpenSim.Region.CoreModules.World.LegacyMap;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 using OMV = OpenMetaverse;
 using OpenSim.Region.Framework.Interfaces;
@@ -37,7 +37,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public static async Task<BInstance> CreateTerrainMesh(
                             Scene scene,
                             PrimToMesh assetMesher, AssetManager assetManager,
-                            BLogger pLog, IParameters pParam) {
+                            IBLogger pLog, IParameters pParam) {
 
             ITerrainChannel terrainDef = scene.Heightmap;
             int XSize = terrainDef.Width;
@@ -45,7 +45,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
             float[,] heightMap = new float[XSize, YSize];
             if (pParam.P<bool>("HalfRezTerrain")) {
-                pLog.DebugFormat("{0}: CreateTerrainMesh. creating half sized terrain sized <{1},{2}>", LogHeader, XSize/2, YSize/2);
+                pLog.Debug("{0}: CreateTerrainMesh. creating half sized terrain sized <{1},{2}>", LogHeader, XSize/2, YSize/2);
                 // Half resolution mesh that approximates the heightmap
                 heightMap = new float[XSize/2, YSize/2];
                 for (int xx = 0; xx < XSize; xx += 2) {
@@ -59,7 +59,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 }
             }
             else {
-                pLog.DebugFormat("{0}: CreateTerrainMesh. creating terrain sized <{1},{2}>", LogHeader, XSize/2, YSize/2);
+                pLog.Debug("{0}: CreateTerrainMesh. creating terrain sized <{1},{2}>", LogHeader, XSize/2, YSize/2);
                 for (int xx = 0; xx < XSize; xx++) {
                     for (int yy = 0; yy < YSize; yy++) {
                         heightMap[xx, yy] = terrainDef.GetHeightAtXYZ(xx, yy, 26);
@@ -119,7 +119,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
             // The above has created a MaterialInfo for the terrain texture
 
-            pLog.DebugFormat("{0}: CreateTerrainMesh. calling MeshFromHeightMap", LogHeader);
+            pLog.Debug("{0}: CreateTerrainMesh. calling MeshFromHeightMap", LogHeader);
             DisplayableRenderable terrainDisplayable = await assetMesher.MeshFromHeightMap(heightMap,
                             terrainDef.Width, terrainDef.Height, assetManager, terrainFace);
 

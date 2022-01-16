@@ -66,6 +66,10 @@ namespace org.herbal3d.cs.CommonEntities
             return (asset != null);
         }
 
+        public void Get(string id, string ForeignAssetService, bool StoreOnLocalGrid, SimpleAssetRetrieved callBack) {
+            throw new NotImplementedException();
+        }
+
         // IAssetService.Get
         public AssetBase Get(string id, string foreignAssetService, bool storeOnLocalGrid) {
             assets.TryGetValue(id, out AssetBase ret);

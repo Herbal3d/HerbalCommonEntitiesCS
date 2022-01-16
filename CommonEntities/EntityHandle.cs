@@ -19,7 +19,7 @@ using System.Collections.Generic;
 
 using OMV = OpenMetaverse;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 namespace org.herbal3d.cs.CommonEntities {
 

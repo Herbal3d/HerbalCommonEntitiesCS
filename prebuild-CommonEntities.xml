@@ -1,4 +1,4 @@
-    <Project frameworkVersion="v4_6" name="Herbal3d.CommonEntities" path="addon-modules/HerbalCommonEntitiesCS/CommonEntities" type="Library">
+    <Project frameworkVersion="v4_8" name="Herbal3d.CommonEntities" path="addon-modules/HerbalCommonEntitiesCS/CommonEntities" type="Library">
       <Configuration name="Debug">
         <Options>
           <OutputPath>../../../bin/</OutputPath>
@@ -24,7 +24,7 @@
       <Reference name="OpenMetaverse"/>
       <Reference name="OpenMetaverseTypes"/>
 
-      <Reference name="Herbal3d.CommonEntitiesUtil" />
+      <Reference name="Herbal3d.CommonUtil" />
 
       <Reference name="Nini" />
       <Reference name="log4net"/>

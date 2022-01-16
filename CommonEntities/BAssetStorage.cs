@@ -20,7 +20,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 namespace org.herbal3d.cs.CommonEntities {
 
@@ -28,10 +28,10 @@ namespace org.herbal3d.cs.CommonEntities {
     #pragma warning disable 414
         private readonly string _logHeader = "[BAssetStorage]";
     #pragma warning restore 414
-        protected readonly BLogger _log;
+        protected readonly IBLogger _log;
         protected readonly IParameters _params;
 
-        public BAssetStorage(BLogger pLog, IParameters pParam) {
+        public BAssetStorage(IBLogger pLog, IParameters pParam) {
             _log = pLog;
             _params = pParam;
         }
@@ -51,17 +51,17 @@ namespace org.herbal3d.cs.CommonEntities {
                     ret = File.ReadAllBytes(absFilename);
                 }
                 catch (DirectoryNotFoundException e) {
-                    _log.ErrorFormat("{0} DirectoryNotFound exception fetching {1}", _logHeader, pEntityName);
+                    _log.Error("{0} DirectoryNotFound exception fetching {1}", _logHeader, pEntityName);
                     var ee = e; // suppress 'e' not used warning
                     ret = new byte[0];
                 }
                 catch (FileNotFoundException e) {
-                    _log.ErrorFormat("{0} FileNotFound exception fetching {1}", _logHeader, pEntityName);
+                    _log.Error("{0} FileNotFound exception fetching {1}", _logHeader, pEntityName);
                     var ee = e; // suppress 'e' not used warning
                     ret = new byte[0];
                 }
                 catch (Exception e) {
-                    _log.ErrorFormat("{0} Exception fetching {1}: {2}", _logHeader, pEntityName, e);
+                    _log.Error("{0} Exception fetching {1}: {2}", _logHeader, pEntityName, e);
                     ret = new byte[0];
                 }
                 return ret;
@@ -79,17 +79,17 @@ namespace org.herbal3d.cs.CommonEntities {
                     ret = File.Open(absFilename, FileMode.Open);
                 }
                 catch (DirectoryNotFoundException e) {
-                    _log.ErrorFormat("{0} DirectoryNotFound exception fetching {1}", _logHeader, pEntityName);
+                    _log.Error("{0} DirectoryNotFound exception fetching {1}", _logHeader, pEntityName);
                     var ee = e; // suppress 'e' not used warning
                     ret = null;
                 }
                 catch (FileNotFoundException e) {
-                    _log.ErrorFormat("{0} FileNotFound exception fetching {1}", _logHeader, pEntityName);
+                    _log.Error("{0} FileNotFound exception fetching {1}", _logHeader, pEntityName);
                     var ee = e; // suppress 'e' not used warning
                     ret = null;
                 }
                 catch (Exception e) {
-                    _log.ErrorFormat("{0} Exception fetching {1}: {2}", _logHeader, pEntityName, e);
+                    _log.Error("{0} Exception fetching {1}: {2}", _logHeader, pEntityName, e);
                     ret = null;
                 }
                 return ret;

@@ -31,7 +31,7 @@ using OMV = OpenMetaverse;
 using OMVA = OpenMetaverse.Assets;
 using OpenMetaverse.Imaging;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 // using CSJ2K;
 
@@ -42,12 +42,12 @@ namespace org.herbal3d.cs.CommonEntities {
     #pragma warning disable 414
         private readonly string _logHeader = "[OSAssetFetcher]";
     #pragma warning restore 414
-        protected readonly BLogger _log;
+        protected readonly IBLogger _log;
         protected readonly IParameters _params;
 
         private IAssetService _assetService;
 
-        public OSAssetFetcher(IAssetService pAssetService, BLogger pLog, IParameters pParam) {
+        public OSAssetFetcher(IAssetService pAssetService, IBLogger pLog, IParameters pParam) {
             _assetService = pAssetService;
             _log = pLog;
             _params = pParam;

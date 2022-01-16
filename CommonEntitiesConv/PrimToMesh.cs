@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using org.herbal3d.cs.CommonEntitiesUtil;
+using org.herbal3d.cs.CommonUtil;
 
 using OMV = OpenMetaverse;
 using OMVR = OpenMetaverse.Rendering;
@@ -36,10 +36,10 @@ namespace org.herbal3d.cs.CommonEntities {
         private MeshmerizerR _mesher;
         static private readonly String _logHeader = "[PrimToMesh]";
 
-        private readonly BLogger _log;
+        private readonly IBLogger _log;
         private readonly IParameters _params;
 
-        public PrimToMesh(BLogger pLog, IParameters pParams) {
+        public PrimToMesh(IBLogger pLog, IParameters pParams) {
             _mesher = new MeshmerizerR();
             _log = pLog;
             _params = pParams;
@@ -89,7 +89,7 @@ namespace org.herbal3d.cs.CommonEntities {
             catch (Exception e) {
                 string errorMsg = String.Format("{0} CreateMeshResource: exception meshing {1}: {2}",
                             _logHeader, sop.UUID, e);
-                _log.ErrorFormat(errorMsg);
+                _log.Error(errorMsg);
                 throw new Exception(errorMsg);
             }
             return displayable;
@@ -148,7 +148,7 @@ namespace org.herbal3d.cs.CommonEntities {
             catch (Exception e) {
                 string errorMsg = String.Format("{0} MeshFromPrimSculptData: exception meshing {1}: {2}",
                             _logHeader, sop.UUID, e);
-                _log.ErrorFormat(errorMsg);
+                _log.Error(errorMsg);
                 throw new Exception(errorMsg);
             }
             return realDR;
@@ -170,7 +170,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     fMesh = _mesher.GenerateFacetedMeshMesh(prim, meshBytes);
                 }
                 catch (Exception e) {
-                    _log.ErrorFormat("{0} MeshFromPrimMeshData: Exception from GenerateFacetedMeshMesh: {1}", _logHeader, e);
+                    _log.Error("{0} MeshFromPrimMeshData: Exception from GenerateFacetedMeshMesh: {1}", _logHeader, e);
                     fMesh = null;
                 }
                 if (fMesh != null) {
@@ -218,7 +218,7 @@ namespace org.herbal3d.cs.CommonEntities {
                         ret.meshes.Add(await ConvertFaceToRenderableMesh(face, assetManager, defaultTexture, primScale));
                     }
                     catch (Exception e) {
-                        _log.ErrorFormat("{0} ConvertFacetedMeshToDisplayable: exception: {1}", _logHeader, e);
+                        _log.Error("{0} ConvertFacetedMeshToDisplayable: exception: {1}", _logHeader, e);
                     }
                 }
             }
@@ -268,7 +268,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     }
                     catch (Exception e) {
                         // Failure getting the image
-                        _log.ErrorFormat("{0} Failure fetching material texture. id={1}. {2}",
+                        _log.Error("{0} Failure fetching material texture. id={1}. {2}",
                                     _logHeader, matInfo.textureID, e);
                         // Create a simple, single color image to fill in for the missing image
                         var fillInImage = new Bitmap(32, 32, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -300,7 +300,7 @@ namespace org.herbal3d.cs.CommonEntities {
             MeshInfo lookupMeshInfo = assetManager.Assets.GetMeshInfo(meshInfo.GetBHash(true), () => { return meshInfo; });
             rmesh.mesh = lookupMeshInfo;
             if (lookupMeshInfo.indices.Count == 0) {    // DEBUG DEBUG
-                _log.ErrorFormat("{0} indices count of zero. rmesh={1}", _logHeader, rmesh.ToString());
+                _log.Error("{0} indices count of zero. rmesh={1}", _logHeader, rmesh.ToString());
             }   // DEBUG DEBUG
 
             LogBProgress("{0} ConvertFaceToRenderableMesh: rmesh.mesh={1}, rmesh.material={2}",
@@ -315,7 +315,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     AssetManager assetManager, OMV.Primitive.TextureEntryFace defaultTexture) {
 
             // OMVR.Face rawMesh = m_mesher.TerrainMesh(pHeightMap, 0, pHeightMap.GetLength(0)-1, 0, pHeightMap.GetLength(1)-1);
-            _log.DebugFormat("{0} MeshFromHeightMap: heightmap=<{1},{2}>, regionSize=<{3},{4}>",
+            _log.Debug("{0} MeshFromHeightMap: heightmap=<{1},{2}>, regionSize=<{3},{4}>",
                     _logHeader, pHeightMap.GetLength(0), pHeightMap.GetLength(1), regionSizeX, regionSizeY);
             OMVR.Face rawMesh = Terrain.TerrainMesh(pHeightMap, (float)regionSizeX, (float)regionSizeY);
 
@@ -353,7 +353,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
         public void LogBProgress(string msg, params Object[] args) {
             if (_params.P<bool>("LogBuilding")) {
-                _log.Log(msg, args);
+                _log.Debug(msg, args);
             }
         }
 
@@ -363,7 +363,7 @@ namespace org.herbal3d.cs.CommonEntities {
             indices.ForEach(ind => {
                 buff.AppendFormat("{0}, ", vertices[ind]);
             });
-            _log.DebugFormat(buff.ToString());
+            _log.Debug(buff.ToString());
         }
 
         public void DumpVertices(string head, List<int> indices, List<OMVR.Vertex> vertices) {
@@ -372,7 +372,7 @@ namespace org.herbal3d.cs.CommonEntities {
             indices.ForEach(ind => {
                 buff.AppendFormat("{0}, ", vertices[ind]);
             });
-            _log.DebugFormat(buff.ToString());
+            _log.Debug(buff.ToString());
         }
     }
 }
