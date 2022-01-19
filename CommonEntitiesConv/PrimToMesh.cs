@@ -37,9 +37,9 @@ namespace org.herbal3d.cs.CommonEntities {
         static private readonly String _logHeader = "[PrimToMesh]";
 
         private readonly IBLogger _log;
-        private readonly IParameters _params;
+        private readonly BConverterOSParams _params;
 
-        public PrimToMesh(IBLogger pLog, IParameters pParams) {
+        public PrimToMesh(IBLogger pLog, BConverterOSParams pParams) {
             _mesher = new MeshmerizerR();
             _log = pLog;
             _params = pParams;
@@ -63,17 +63,22 @@ namespace org.herbal3d.cs.CommonEntities {
                         var dispable = await MeshFromPrimMeshData(sog, sop, prim, assetManager, lod);
                         displayable = new Displayable(dispable,
                                                 sop.Name, sop.UUID,
-                                                sop.OffsetPosition, sop.RotationOffset, sop.Scale,
-                                                CollectObjectAttributes(sop), _params);
+                                                sop.OffsetPosition,
+                                                sop.RotationOffset,
+                                                sop.Scale,
+                                                CollectObjectAttributes(sop));
                     }
                     else {
                         LogBProgress("{0}: CreateMeshResource: creating sculpty", _logHeader);
                         // _stats.numSculpties++;
                         var dispable = await MeshFromPrimSculptData(sog, sop, prim, assetManager, lod);
                         displayable = new Displayable(dispable,
-                                                sop.Name, sop.UUID,
-                                                sop.OffsetPosition, sop.RotationOffset, sop.Scale,
-                                                CollectObjectAttributes(sop), _params);
+                                                sop.Name,
+                                                sop.UUID,
+                                                sop.OffsetPosition,
+                                                sop.RotationOffset,
+                                                sop.Scale,
+                                                CollectObjectAttributes(sop));
                     }
                 }
                 else {
@@ -81,9 +86,12 @@ namespace org.herbal3d.cs.CommonEntities {
                     // _stats.numSimplePrims++;
                     var dispable = await MeshFromPrimShapeData(sog, sop, prim, assetManager, lod);
                     displayable = new Displayable(dispable,
-                                            sop.Name, sop.UUID,
-                                            sop.OffsetPosition, sop.RotationOffset, sop.Scale,
-                                            CollectObjectAttributes(sop), _params);
+                                            sop.Name,
+                                            sop.UUID,
+                                            sop.OffsetPosition,
+                                            sop.RotationOffset,
+                                            sop.Scale,
+                                            CollectObjectAttributes(sop));
                 }
             }
             catch (Exception e) {
@@ -242,7 +250,7 @@ namespace org.herbal3d.cs.CommonEntities {
             LogBProgress("{0} ConvertFaceToRenderableMesh: faceId={1}, numVert={2}, numInd={3}",
                  _logHeader, face.ID, meshInfo.vertexs.Count, meshInfo.indices.Count);
 
-            if (!_params.P<bool>("DisplayTimeScaling")) {
+            if (!_params.displayTimeScaling) {
                 if (ScaleMeshes(meshInfo, primScale)) {
                     LogBProgress("{0} ConvertFaceToRenderableMesh: scaled mesh to {1}",
                              _logHeader, primScale);
@@ -251,7 +259,7 @@ namespace org.herbal3d.cs.CommonEntities {
             }
 
             // Find or create the MaterialInfo for this face.
-            MaterialInfo matInfo = new MaterialInfo(face, defaultTexture, _params);
+            MaterialInfo matInfo = new MaterialInfo(face, defaultTexture, _params.doubleSided);
             if (matInfo.textureID != null
                         && matInfo.textureID != OMV.UUID.Zero
                         && matInfo.textureID != OMV.Primitive.TextureEntry.WHITE_TEXTURE) {
@@ -261,7 +269,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 ImageInfo lookupImageInfo = await assetManager.Assets.GetImageInfo(textureHash, async () => {
                     // The image is not in the cache yet so create an ImageInfo entry for it
                     // Note that image gets the same UUID as the OpenSim texture
-                    ImageInfo imageInfo = new ImageInfo(textureHandle, _log, _params);
+                    ImageInfo imageInfo = new ImageInfo(textureHandle, _log);
                     try {
                         var img = await assetManager.OSAssets.FetchTextureAsImage(textureHandle);
                         imageInfo.SetImage(img);
@@ -352,7 +360,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public void LogBProgress(string msg, params Object[] args) {
-            if (_params.P<bool>("LogBuilding")) {
+            if (_params.logBuilding) {
                 _log.Debug(msg, args);
             }
         }

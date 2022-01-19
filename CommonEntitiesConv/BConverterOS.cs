@@ -29,14 +29,21 @@ using OMVR = OpenMetaverse.Rendering;
 
 
 namespace org.herbal3d.cs.CommonEntities {
+    public class BConverterOSParams {
+        public bool addTerrainMesh = false;
+        public bool displayTimeScaling = false;
+        public bool doubleSided = false;
+        public bool logBuilding = false;
+    }
+
     // Convert things from OpenSimulator to Instances and Displayables things
     public class BConverterOS {
         private static readonly string _logHeader = "[BConverterOS]";
 
+        private readonly BConverterOSParams _params;
         private readonly IBLogger _log;
-        private readonly IParameters _params;
 
-        public BConverterOS(IBLogger pLog, IParameters pParams) {
+        public BConverterOS(IBLogger pLog, BConverterOSParams pParams) {
             _log = pLog;
             _params = pParams;
         }
@@ -70,10 +77,16 @@ namespace org.herbal3d.cs.CommonEntities {
 
                 // Add the terrain mesh to the scene
                 BInstance terrainInstance = null;
-                if (_params.P<bool>("AddTerrainMesh")) {
+                if (_params.addTerrainMesh) {
                     _log.Debug("{0} Creating terrain for scene", _logHeader);
                     // instanceList.Add(ConvoarTerrain.CreateTerrainMesh(scene, mesher, assetManager));
-                    terrainInstance = await Terrain.CreateTerrainMesh(scene, mesher, assetManager, _log, _params);
+                    terrainInstance = await Terrain.CreateTerrainMesh(scene: scene,
+                                                                    assetMesher: mesher,
+                                                                    assetManager: assetManager,
+                                                                    convoarId: "xx",
+                                                                    halfRezTerrain: true,
+                                                                    createTerrainSplat: true,
+                                                                    logger: _log);
                     CoordAxis.FixCoordinates(terrainInstance, CoordAxis.CoordAxis_Default);
                     instanceList.Add(terrainInstance);
                 }
@@ -164,7 +177,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     Representation = rootDisplayable
                 };
 
-                if (_params.P<bool>("LogBuilding")) {
+                if (_params.logBuilding) {
                     DumpInstance(ret);
                 }
             }
@@ -198,7 +211,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public void LogBProgress(string msg, params Object[] args) {
-            if (_params.P<bool>("LogBuilding")) {
+            if (_params.logBuilding) {
                 _log.Debug(msg, args);
             }
         }

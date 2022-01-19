@@ -43,20 +43,19 @@ namespace org.herbal3d.cs.CommonEntities {
         private readonly IBLogger _log;
         private readonly IParameters _params;
 
-        public ImageInfo(IBLogger pLog, IParameters pParams) : this(new EntityHandleUUID(), pLog, pParams ){
+        public ImageInfo(IBLogger pLog) : this(new EntityHandleUUID(), pLog){
         }
 
-        public ImageInfo(EntityHandle pHandle, IBLogger pLog, IParameters pParams) {
+        public ImageInfo(EntityHandle pHandle, IBLogger pLog) {
             handle = pHandle;
             imageIdentifier = handle.GetUUID(); // image is unique unless underlying set
             _log = pLog;
-            _params = pParams;
         }
 
         // Create a new ImageInfo that has a copy of all the information from this one.
         // THis creates a copy of the image so it can be modified without touching the original.
         public ImageInfo Clone() {
-            ImageInfo ret = new ImageInfo(_log, _params);
+            ImageInfo ret = new ImageInfo(_log);
             if (image != null) {
                 ret.SetImage((Image)image.Clone());
             }

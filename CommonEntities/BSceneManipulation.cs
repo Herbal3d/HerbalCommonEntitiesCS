@@ -366,7 +366,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 RenderableMeshGroup meshGroup = new RenderableMeshGroup();
                 meshGroup.meshes.Add(newMesh);
 
-                Displayable displayable = new Displayable(meshGroup, _params) {
+                Displayable displayable = new Displayable(meshGroup) {
                     name = "combinedMaterialMeshes-" + materialHash.ToString()
                 };
 
@@ -419,7 +419,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 RenderableMeshGroup mesh = new RenderableMeshGroup();
                 mesh.meshes.Add(imesh.renderableMesh);
 
-                Displayable disp = new Displayable(mesh, _params) {
+                Displayable disp = new Displayable(mesh) {
                     name = createName(imesh),
                     offsetPosition = imesh.globalPosition - gPos,
                     offsetRotation = imesh.globalRotation,

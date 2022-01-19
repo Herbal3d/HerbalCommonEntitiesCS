@@ -47,10 +47,9 @@ namespace org.herbal3d.cs.CommonEntities {
 
         private IAssetService _assetService;
 
-        public OSAssetFetcher(IAssetService pAssetService, IBLogger pLog, IParameters pParam) {
+        public OSAssetFetcher(IAssetService pAssetService, IBLogger pLog) {
             _assetService = pAssetService;
             _log = pLog;
-            _params = pParam;
         }
 
         // In OpenSimulator storage, objects are stored as typed AssetBase objects.

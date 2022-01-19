@@ -27,13 +27,15 @@ namespace org.herbal3d.cs.CommonEntities {
     public class BAssetStorage : IDisposable {
     #pragma warning disable 414
         private readonly string _logHeader = "[BAssetStorage]";
-    #pragma warning restore 414
+#pragma warning restore 414
+        protected string _outputDir;
+        protected bool _useDeepFilenames;
         protected readonly IBLogger _log;
-        protected readonly IParameters _params;
 
-        public BAssetStorage(IBLogger pLog, IParameters pParam) {
-            _log = pLog;
-            _params = pParam;
+        public BAssetStorage(IBLogger logger, string outputDir, bool useDeepFilenames) {
+            _log = logger;
+            _outputDir = outputDir;
+            _useDeepFilenames = useDeepFilenames;
         }
 
         public Task<byte[]> Fetch(EntityHandle pHandle) {
@@ -104,7 +106,7 @@ namespace org.herbal3d.cs.CommonEntities {
             return Task<byte[]>.Run(() => {
                 string strippedEntityName = Path.GetFileNameWithoutExtension(pEntityName);
                 string outDir = this.GetStorageDir(strippedEntityName);
-                string absDir = PersistRules.CreateDirectory(outDir, _params);
+                string absDir = PersistRules.CreateDirectory(outDir);
                 string absFilename = Path.Combine(absDir, pEntityName);
                 File.WriteAllBytes(absFilename, pData);
             });
@@ -137,7 +139,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
         public string GetStorageDir(string pStorageName) {
             string strippedStorageName = Path.GetFileNameWithoutExtension(pStorageName);
-            return PersistRules.StorageDirectory(strippedStorageName, _params);
+            return PersistRules.StorageDirectory(strippedStorageName, _outputDir, _useDeepFilenames);
         }
 
         public void Dispose() {

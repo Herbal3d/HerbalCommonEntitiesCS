@@ -33,19 +33,27 @@ namespace org.herbal3d.cs.CommonEntities {
 
         private static readonly string LogHeader = "Terrain";
 
+        private bool _halfRezTerrain;
+        private bool _createTerrainSplat;
+        private bool _convoarId;
+
         // Create a mesh for the terrain of the current scene
         public static async Task<BInstance> CreateTerrainMesh(
                             Scene scene,
-                            PrimToMesh assetMesher, AssetManager assetManager,
-                            IBLogger pLog, IParameters pParam) {
+                            PrimToMesh assetMesher,
+                            AssetManager assetManager,
+                            string convoarId,
+                            bool halfRezTerrain,
+                            bool createTerrainSplat,
+                            IBLogger logger) {
 
             ITerrainChannel terrainDef = scene.Heightmap;
             int XSize = terrainDef.Width;
             int YSize = terrainDef.Height;
 
             float[,] heightMap = new float[XSize, YSize];
-            if (pParam.P<bool>("HalfRezTerrain")) {
-                pLog.Debug("{0}: CreateTerrainMesh. creating half sized terrain sized <{1},{2}>", LogHeader, XSize/2, YSize/2);
+            if (halfRezTerrain) {
+                logger.Debug("{0}: CreateTerrainMesh. creating half sized terrain sized <{1},{2}>", LogHeader, XSize/2, YSize/2);
                 // Half resolution mesh that approximates the heightmap
                 heightMap = new float[XSize/2, YSize/2];
                 for (int xx = 0; xx < XSize; xx += 2) {
@@ -59,7 +67,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 }
             }
             else {
-                pLog.Debug("{0}: CreateTerrainMesh. creating terrain sized <{1},{2}>", LogHeader, XSize/2, YSize/2);
+                logger.Debug("{0}: CreateTerrainMesh. creating terrain sized <{1},{2}>", LogHeader, XSize/2, YSize/2);
                 for (int xx = 0; xx < XSize; xx++) {
                     for (int yy = 0; yy < YSize; yy++) {
                         heightMap[xx, yy] = terrainDef.GetHeightAtXYZ(xx, yy, 26);
@@ -68,7 +76,7 @@ namespace org.herbal3d.cs.CommonEntities {
             }
 
             // Number found in RegionSettings.cs as DEFAULT_TERRAIN_TEXTURE_3
-            OMV.UUID convoarID = new OMV.UUID(pParam.P<string>("ConvoarID"));
+            OMV.UUID convoarID = new OMV.UUID(convoarId);
 
             OMV.UUID defaultTextureID = new OMV.UUID("179cdabd-398a-9b6b-1391-4dc333ba321f");
             OMV.Primitive.TextureEntryFace terrainFace = new OMV.Primitive.TextureEntryFace(null) {
@@ -76,11 +84,11 @@ namespace org.herbal3d.cs.CommonEntities {
             };
 
             EntityHandleUUID terrainTextureHandle = new EntityHandleUUID();
-            MaterialInfo terrainMaterialInfo = new MaterialInfo(terrainFace, pParam);
+            MaterialInfo terrainMaterialInfo = new MaterialInfo(terrainFace);
 
             Image terrainImage = null;
             ImageInfo terrainImageInfo = null;
-            if (pParam.P<bool>("CreateTerrainSplat")) {
+            if (createTerrainSplat) {
                 // Use the OpenSim maptile generator to create a texture for the terrain
                 var terrainRenderer = new TexturedMapTileRenderer();
                 Nini.Config.IConfigSource config = new Nini.Config.IniConfigSource();
@@ -92,7 +100,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 terrainImage = (Image)mapbmp;
 
                 // Place the newly created image into the Displayable caches
-                terrainImageInfo = new ImageInfo(pLog, pParam) {
+                terrainImageInfo = new ImageInfo(logger) {
                     handle = terrainTextureHandle,
                     image = mapbmp,
                     resizable = false // terrain image resolution is not reduced
@@ -104,7 +112,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 BHash terrainHash = new BHashULong(terrainTextureHandle.GetHashCode());
                 terrainImageInfo = await assetManager.Assets.GetImageInfo(terrainHash, async () => {
                     // The image is not already in the cache so create ImageInfo
-                    ImageInfo newTerrainImageInfo = new ImageInfo(pLog, pParam) {
+                    ImageInfo newTerrainImageInfo = new ImageInfo(logger) {
                         handle = terrainTextureHandle,
                         resizable = false // terrain image resolution is not reduced
                     };
@@ -119,12 +127,12 @@ namespace org.herbal3d.cs.CommonEntities {
 
             // The above has created a MaterialInfo for the terrain texture
 
-            pLog.Debug("{0}: CreateTerrainMesh. calling MeshFromHeightMap", LogHeader);
+            logger.Debug("{0}: CreateTerrainMesh. calling MeshFromHeightMap", LogHeader);
             DisplayableRenderable terrainDisplayable = await assetMesher.MeshFromHeightMap(heightMap,
                             terrainDef.Width, terrainDef.Height, assetManager, terrainFace);
 
             BInstance terrainInstance = new BInstance();
-            Displayable terrainDisp = new Displayable(terrainDisplayable, pParam) {
+            Displayable terrainDisp = new Displayable(terrainDisplayable) {
                 name = "Terrain",
                 baseUUID = OMV.UUID.Random()
             };

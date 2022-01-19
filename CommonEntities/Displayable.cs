@@ -68,21 +68,21 @@ namespace org.herbal3d.cs.CommonEntities {
         public OMV.UUID baseUUID = OMV.UUID.Zero;   // the UUID of the original object that careated is displayable
         public BAttributes attributes = new BAttributes();
 
-        private readonly IParameters _params;
+        private bool _displayTimeScaling = false;
 
-        public Displayable(IParameters pParams) {
+
+        public Displayable() {
             handle = new EntityHandleUUID();
-            _params = pParams;
         }
 
-        public Displayable(DisplayableRenderable pRenderable, IParameters pParams) : this(pParams) {
+        public Displayable(DisplayableRenderable pRenderable) : this() {
             renderable = pRenderable;
         }
 
         public Displayable(DisplayableRenderable pRenderable, 
                         string pName, OMV.UUID pUUID,
                         OMV.Vector3 pOffsetPosition, OMV.Quaternion pOffsetRotation, OMV.Vector3 pScale,
-                        BAttributes pObjectParams, IParameters pParams) : this(pParams) {
+                        BAttributes pObjectParams) : this() {
             name = pName;
             baseUUID = pUUID;
             // If not a root prim, add the offset to the root. 
@@ -96,7 +96,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 offsetRotation = pOffsetRotation;
             }
             // If scaling is to be done by the renderer, copy the prim's scale
-            if (_params.P<bool>("DisplayTimeScaling")) {
+            if (_displayTimeScaling) {
                 scale = pScale;
             }
             attributes = pObjectParams;

@@ -29,6 +29,15 @@ using OMV = OpenMetaverse;
 
 namespace org.herbal3d.cs.CommonEntities {
 
+    public class PersistRulesParams {
+        public string outputDir = "./";
+        public string preferredTextureFormatIfNoTransparency = "JPG";
+        public string preferredTextureFormat = "PNG";
+        public bool writeBinaryGltf = false;
+        public bool useReadableFilenames = false;
+        public bool useDeepFilenames = false;
+    }
+
     // Classes to handle persistance of output.
     // The converted images go somewhere for later fetching.
     // These classes wrap the logic for storing the binary, images, and json files
@@ -111,19 +120,19 @@ namespace org.herbal3d.cs.CommonEntities {
         public string AssetName;
 
         // If target type is not specified, select the image type depending on parameters and transparency
-        public static TargetType FigureOutTargetTypeFromAssetType(AssetType pAssetType, IParameters pParams) {
+        public static TargetType FigureOutTargetTypeFromAssetType(AssetType pAssetType, PersistRulesParams pParams) {
             TargetType ret = AssetTypeToTargetType[pAssetType];
 
             // If target type is not specified, select the image type depending on parameters and transparency
             if (ret == TargetType.Default) {
                 if (pAssetType == AssetType.Image) {
-                    ret = TextureFormatToTargetType[pParams.P<string>("PreferredTextureFormatIfNoTransparency").ToLower()];
+                    ret = TextureFormatToTargetType[pParams.preferredTextureFormatIfNoTransparency.ToLower()];
                 }
                 if (pAssetType == AssetType.ImageTrans) {
-                    ret = TextureFormatToTargetType[pParams.P<string>("PreferredTextureFormat").ToLower()];
+                    ret = TextureFormatToTargetType[pParams.preferredTextureFormat.ToLower()];
                 }
                 if (pAssetType == AssetType.Scene) {
-                    if (pParams.P<bool>("WriteBinaryGltf")) {
+                    if (pParams.writeBinaryGltf) {
                         ret = TargetType.Glb;
                     }
                     else {
@@ -136,7 +145,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // Pass in a relative directory name and return a full directory path
         //     and create the directory if it doesn't exist.
-        public static string CreateDirectory(string pDir, IParameters pParams) {
+        public static string CreateDirectory(string pDir) {
             string absDir = Path.GetFullPath(pDir);
             if (!Directory.Exists(absDir)) {
                 Directory.CreateDirectory(absDir);
@@ -145,17 +154,17 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         // Given a filename, return the relative directory that the file will be stored in
-        public string GetStorageDir(string pStorageName, IParameters pParams) {
+        public string GetStorageDir(string pStorageName, string outputDir, bool useDeepFilenames = false) {
             string strippedStorageName = Path.GetFileNameWithoutExtension(pStorageName);
-            return PersistRules.StorageDirectory(strippedStorageName, pParams);
+            return PersistRules.StorageDirectory(strippedStorageName, outputDir: outputDir, useDeepFilenames: useDeepFilenames);
         }
 
         // Compute the filename of this object when written out.
         // Mostly about computing the file extension based on the AssetType.
         // public static string GetFilename(GltfClass pObject, string pLongName, IParameters pParams) {
-        public static string GetFilename(AssetType pAssetType, string pReadableName, string pLongName, IParameters pParams) {
+        public static string GetFilename(AssetType pAssetType, string pReadableName, string pLongName, PersistRulesParams pParams) {
             string ret = null;
-            if (pParams.P<bool>("UseReadableFilenames")) {
+            if (pParams.useReadableFilenames) {
                 var targetType = FigureOutTargetTypeFromAssetType(pAssetType, pParams);
                 ret = pReadableName + "." + PersistRules.TargetTypeToExtension[targetType];
             }
@@ -170,10 +179,10 @@ namespace org.herbal3d.cs.CommonEntities {
         //    should be stored in.
         // Uses sub-directories made out of the filename.
         //     "01234567890123456789" => "baseDirectory/01/23/45/6789"
-        public static string StorageDirectory(string pHash, IParameters pParams) {
+        public static string StorageDirectory(string pHash, string outputDir, bool useDeepFilenames = false) {
             string ret = null;
-            string baseDirectory = pParams.P<string>("OutputDir");
-            if (pParams.P<bool>("UseDeepFilenames") && pHash.Length >= 10) {
+            string baseDirectory = outputDir;
+            if (useDeepFilenames && pHash.Length >= 10) {
                 if (String.IsNullOrEmpty(baseDirectory)) {
                     ret = Path.Combine(pHash.Substring(0, 2),
                             Path.Combine(pHash.Substring(2, 2),

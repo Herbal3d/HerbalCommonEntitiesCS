@@ -40,16 +40,13 @@ namespace org.herbal3d.cs.CommonEntities {
         public bool twoSided;
 
         private BHash _hash = null;
-        private readonly IParameters _params;
 
-        public MaterialInfo(OMV.Primitive.TextureEntryFace defaultTexture, IParameters pParams) {
+        public MaterialInfo(OMV.Primitive.TextureEntryFace defaultTexture) {
             faceTexture = new OMV.Primitive.TextureEntryFace(defaultTexture);
-            _params = pParams;
         }
 
-        public MaterialInfo(OMVR.Face face, OMV.Primitive.TextureEntryFace defaultTexture, IParameters pParams) {
+        public MaterialInfo(OMVR.Face face, OMV.Primitive.TextureEntryFace defaultTexture, bool pDoubleSided = false) {
             handle = new EntityHandleUUID();
-            _params = pParams;
             faceTexture = face.TextureFace;
             if (faceTexture == null) {
                 faceTexture = defaultTexture;
@@ -62,7 +59,7 @@ namespace org.herbal3d.cs.CommonEntities {
             bump = faceTexture.Bump;
             glow = faceTexture.Glow;
             shiny = faceTexture.Shiny;
-            twoSided = _params.P<bool>("DoubleSided");
+            twoSided = pDoubleSided;
         }
 
         public BHash GetBHash() {

@@ -33,12 +33,17 @@ namespace org.herbal3d.cs.CommonEntities {
         public BAssets Assets;
         public BAssetStorage AssetStorage;
 
-        public AssetManager(IAssetService pAssetService, IBLogger pLog, IParameters pParam) {
-            _log = pLog;
-            _params = pParam;
-            OSAssets = new OSAssetFetcher(pAssetService, pLog, pParam);
-            Assets = new BAssets(pLog, pParam);
-            AssetStorage = new BAssetStorage(pLog, pParam);
+        public AssetManager(IAssetService pAssetService,
+                            IBLogger logger,
+                            string outputDir,
+                            bool useDeepFilenames = false) {
+
+            _log = logger;
+            OSAssets = new OSAssetFetcher(pAssetService, _log);
+            Assets = new BAssets(_log);
+            AssetStorage = new BAssetStorage(logger: _log,
+                            outputDir: outputDir,
+                            useDeepFilenames: useDeepFilenames);
         }
 
         public void Dispose() {

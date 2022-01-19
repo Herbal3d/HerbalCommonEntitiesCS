@@ -120,7 +120,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\HerbalCommonUtilCS\Herbal3d.CommonUtil.csproj">
-      <Project>{a0ec2ce8-61ff-46dd-aec1-0154c1041d78}</Project>
+      <Project>{562475fc-fc18-4e46-b5af-461754271efc}</Project>
       <Name>Herbal3d.CommonUtil</Name>
     </ProjectReference>
   </ItemGroup>

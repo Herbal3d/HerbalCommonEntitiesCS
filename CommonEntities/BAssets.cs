@@ -29,11 +29,9 @@ namespace org.herbal3d.cs.CommonEntities {
 #pragma warning restore 414
 
         protected readonly IBLogger _log;
-        protected readonly IParameters _params;
 
-        public BAssets(IBLogger pLog, IParameters pParam) {
+        public BAssets(IBLogger pLog) {
             _log = pLog;
-            _params = pParam;
             Displayables = new Dictionary<BHash, Displayable>();
             Renderables = new Dictionary<BHash, DisplayableRenderable>();
             Meshes = new OMV.DoubleDictionary<BHash, EntityHandle, MeshInfo>();
