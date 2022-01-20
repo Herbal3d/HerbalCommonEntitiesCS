@@ -46,7 +46,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public int referenceID;
         public abstract Object AsJSON();    // return object that's serializable as JSON
 
-        protected IBLogger _log;
+        protected BLogger _log;
         protected gltfParams _params;
 
         public PersistRules.AssetType AssetType = PersistRules.AssetType.Unknown;
@@ -62,11 +62,11 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public GltfClass() { }
-        public GltfClass(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) {
+        public GltfClass(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) {
             BaseInit(pRoot, pID, pLog, pParams);
         }
 
-        protected void BaseInit(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) {
+        protected void BaseInit(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) {
             gltfRoot = pRoot;
             ID = pID;
             _log = pLog;
@@ -171,7 +171,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
         public GltfSampler defaultSampler;
 
-        public Gltf(string pSceneName, IBLogger pLog, gltfParams pParams) :
+        public Gltf(string pSceneName, BLogger pLog, gltfParams pParams) :
                             base(null, pSceneName, pLog, pParams) {
             gltfRoot = this;
             AssetType = PersistRules.AssetType.Scene;
@@ -639,7 +639,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfAttributes values;
         public GltfAttributes extras;
 
-        public GltfAsset(Gltf pRoot, IBLogger pLog, gltfParams pParams) : base(pRoot, "", pLog, pParams) {
+        public GltfAsset(Gltf pRoot, BLogger pLog, gltfParams pParams) : base(pRoot, "", pLog, pParams) {
             values = new GltfAttributes {
                 { "generator", "convoar" },
                 { "version", "2.0" },
@@ -673,7 +673,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfExtensions extensions;
         public GltfAttributes extras;
 
-        public GltfScene(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfScene(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             nodes = new GltfNodes(gltfRoot);
             name = pID;
             extensions = new GltfExtensions(pRoot);
@@ -714,12 +714,12 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // Add a node that is not top level in a scene
         // Does not add to the built node collection
-        public GltfNode(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfNode(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             NodeInit(pRoot);
             LogGltf("{0} GltfNode: created empty. ID={1}", "Gltf", ID);
         }
 
-        public GltfNode(Gltf pRoot, Displayable pDisplayable, IBLogger pLog, gltfParams pParams)
+        public GltfNode(Gltf pRoot, Displayable pDisplayable, BLogger pLog, gltfParams pParams)
                             : base(pRoot, pDisplayable.baseUUID.ToString() + "_node", pLog, pParams) {
             LogGltf("{0} GltfNode: starting node create. ID={1}, disphash={2}, dispRendHandle={3}",
                         "Gltf", ID, pDisplayable.GetBHash(), pDisplayable.renderable.handle);
@@ -755,7 +755,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         // Get an existing instance of a node or create a new one
-        public static GltfNode GltfNodeFactory(Gltf pRoot, Displayable pDisplayable, IBLogger pLog, gltfParams pParams) {
+        public static GltfNode GltfNodeFactory(Gltf pRoot, Displayable pDisplayable, BLogger pLog, gltfParams pParams) {
             BHash displayableHash = pDisplayable.GetBHash();
             if (!pRoot.nodes.TryGetValue(displayableHash, out GltfNode node)) {
                 // This is the only place we should be creating nodes
@@ -817,7 +817,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public BHash bHash;
         public Displayable underlyingDisplayable;
 
-        public GltfMesh(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfMesh(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             primitives = new GltfPrimitives(gltfRoot);
             extensions = new GltfExtensions(pRoot);
             extras = new GltfAttributes();
@@ -827,7 +827,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public GltfMesh(Gltf pRoot, DisplayableRenderable pDR, 
-                            IBLogger pLog, gltfParams pParams) : base(pRoot, pDR.handle.ToString() + "_dr", pLog, pParams) {
+                            BLogger pLog, gltfParams pParams) : base(pRoot, pDR.handle.ToString() + "_dr", pLog, pParams) {
             primitives = new GltfPrimitives(gltfRoot);
             extensions = new GltfExtensions(pRoot);
             extras = new GltfAttributes();
@@ -856,7 +856,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public static GltfMesh GltfMeshFactory(Gltf pRoot, DisplayableRenderable pDR, 
-                                    IBLogger pLog, gltfParams pParams) {
+                                    BLogger pLog, gltfParams pParams) {
             if (!pRoot.meshes.TryGetValue(pDR.GetBHash(), out GltfMesh mesh)) {
                 mesh = new GltfMesh(pRoot, pDR, pLog, pParams);
             }
@@ -895,13 +895,13 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfAccessor texcoord;
         public GltfMaterial material;
 
-        public GltfPrimitive(Gltf pRoot, IBLogger pLog, gltfParams pParams) : base(pRoot, "primitive", pLog, pParams) {
+        public GltfPrimitive(Gltf pRoot, BLogger pLog, gltfParams pParams) : base(pRoot, "primitive", pLog, pParams) {
             mode = 4;
             LogGltf("{0} GltfPrimitive: created empty. ID={1}", "Gltf", ID);
         }
 
         public GltfPrimitive(Gltf pRoot, RenderableMesh pRenderableMesh, 
-                        IBLogger pLog, gltfParams pParams) : base(pRoot, "primitive", pLog, pParams) {
+                        BLogger pLog, gltfParams pParams) : base(pRoot, "primitive", pLog, pParams) {
             mode = 4;
             meshInfo = pRenderableMesh.mesh;
             matInfo = pRenderableMesh.material;
@@ -918,7 +918,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public static GltfPrimitive GltfPrimitiveFactory(Gltf pRoot, RenderableMesh pRenderableMesh,
-                            IBLogger pLog, gltfParams pParams) {
+                            BLogger pLog, gltfParams pParams) {
             if (!pRoot.primitives.TryGetValue(pRenderableMesh.GetBHash(), out GltfPrimitive prim)) {
                 prim = new GltfPrimitive(pRoot, pRenderableMesh, pLog, pParams);
             }
@@ -978,7 +978,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfAttributes topLevelValues;   // top level values that are output as part of the material
 
         protected void MaterialInit(Gltf pRoot, MaterialInfo matInfo, 
-                                IBLogger pLog, gltfParams pParams) {
+                                BLogger pLog, gltfParams pParams) {
             extras = new GltfAttributes();
             topLevelValues = new GltfAttributes();
             extensions = new GltfExtensions(pRoot);
@@ -1047,7 +1047,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public static GltfMaterial GltfMaterialFactory(Gltf pRoot, MaterialInfo matInfo,
-                            IBLogger pLog, gltfParams pParams) {
+                            BLogger pLog, gltfParams pParams) {
             if (!pRoot.materials.TryGetValue(matInfo.GetBHash(), out GltfMaterial mat)) {
                 // mat = new GltfMaterialCommon2(pRoot, matInfo);
                 mat = new GltfMaterialPbrMetallicRoughness(pRoot, matInfo, pLog, pParams);
@@ -1062,7 +1062,7 @@ namespace org.herbal3d.cs.CommonEntities {
         GltfExtension materialCommonExt;
 
         public GltfMaterialCommon2(Gltf pRoot, MaterialInfo matInfo, 
-                                IBLogger pLog, gltfParams pParams) {
+                                BLogger pLog, gltfParams pParams) {
             MaterialInit(pRoot, matInfo, pLog, pParams);
         }
 
@@ -1101,7 +1101,7 @@ namespace org.herbal3d.cs.CommonEntities {
     public class GltfMaterialPbrMetallicRoughness : GltfMaterial {
 
         public GltfMaterialPbrMetallicRoughness(Gltf pRoot, MaterialInfo matInfo, 
-                                IBLogger pLog, gltfParams pParams) {
+                                BLogger pLog, gltfParams pParams) {
             MaterialInit(pRoot, matInfo, pLog, pParams);
         }
 
@@ -1160,7 +1160,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public Object[] min;
         public Object[] max;
 
-        public GltfAccessor(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfAccessor(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             gltfRoot.accessors.Add(new BHashULong(gltfRoot.accessors.Count), this);
             LogGltf("{0} GltfAccessor: created empty. ID={1}", "Gltf", ID);
         }
@@ -1194,7 +1194,7 @@ namespace org.herbal3d.cs.CommonEntities {
         private readonly OMV.UUID _uuid; // Used to identify buffer
         private readonly string _identifyingString;
 
-        public GltfBuffer(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfBuffer(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             AssetType = PersistRules.AssetType.Buff;
             extensions = new GltfExtensions(pRoot);
             extras = new GltfAttributes();
@@ -1239,7 +1239,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfExtensions extensions;
         public GltfAttributes extras;
 
-        public GltfBufferView(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfBufferView(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             gltfRoot.bufferViews.Add(new BHashULong(gltfRoot.bufferViews.Count), this);
             name = pID;
             extensions = new GltfExtensions(pRoot);
@@ -1268,7 +1268,7 @@ namespace org.herbal3d.cs.CommonEntities {
     }
 
     public class GltfTechnique : GltfClass {
-        public GltfTechnique(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfTechnique(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             gltfRoot.techniques.Add(new BHashULong(gltfRoot.techniques.Count), this);
             LogGltf("{0} GltfTechnique: created empty. ID={1}", "Gltf", ID);
         }
@@ -1287,7 +1287,7 @@ namespace org.herbal3d.cs.CommonEntities {
     }
 
     public class GltfProgram : GltfClass {
-        public GltfProgram(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfProgram(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             gltfRoot.programs.Add(new BHashULong(gltfRoot.programs.Count), this);
             LogGltf("{0} GltfTechnique: created empty. ID={1}", "Gltf", ID);
         }
@@ -1306,7 +1306,7 @@ namespace org.herbal3d.cs.CommonEntities {
     }
 
     public class GltfShader : GltfClass {
-        public GltfShader(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfShader(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             gltfRoot.shaders.Add(new BHashULong(gltfRoot.shaders.Count), this);
             LogGltf("{0} GltfShader: created empty. ID={1}", "Gltf", ID);
         }
@@ -1348,13 +1348,13 @@ namespace org.herbal3d.cs.CommonEntities {
         // public uint format;
         // public uint internalFormat;
 
-        public GltfTexture(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfTexture(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             // gltfRoot.textures.Add(this);
             LogGltf("{0} GltfTexture: created empty. ID={1}", "Gltf", ID);
         }
 
         public GltfTexture(Gltf pRoot, ImageInfo pImageInfo, GltfImage pImage,
-                    IBLogger pLog, gltfParams pParams) : base(pRoot, pImageInfo.handle.ToString() + "_tex", pLog, pParams) {
+                    BLogger pLog, gltfParams pParams) : base(pRoot, pImageInfo.handle.ToString() + "_tex", pLog, pParams) {
             if (pImageInfo.handle is EntityHandleUUID handleU) {
                 underlyingUUID = handleU.GetUUID();
             }
@@ -1371,7 +1371,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public static GltfTexture GltfTextureFactory(Gltf pRoot, ImageInfo pImageInfo, GltfImage pImage,
-                            IBLogger pLog, gltfParams pParams) {
+                            BLogger pLog, gltfParams pParams) {
             if (!pRoot.textures.TryGetValue(pImageInfo.GetBHash(), out GltfTexture tex)) {
                 tex = new GltfTexture(pRoot, pImageInfo, pImage, pLog, pParams);
             }
@@ -1417,12 +1417,12 @@ namespace org.herbal3d.cs.CommonEntities {
         public OMV.UUID underlyingUUID;
         public ImageInfo imageInfo;
     
-        public GltfImage(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfImage(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             // gltfRoot.images.Add(this);
             LogGltf("{0} GltfImage: created empty. ID={1}", "Gltf", ID);
         }
 
-        public GltfImage(Gltf pRoot, ImageInfo pImageInfo, IBLogger pLog, gltfParams pParams)
+        public GltfImage(Gltf pRoot, ImageInfo pImageInfo, BLogger pLog, gltfParams pParams)
                                 : base(pRoot, pImageInfo.handle.ToString() + "_img", pLog, pParams) {
             imageInfo = pImageInfo;
             AssetType = imageInfo.hasTransprency ? PersistRules.AssetType.ImageTrans : PersistRules.AssetType.Image;
@@ -1434,7 +1434,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     "Gltf", ID, underlyingUUID, imageInfo.handle);
         }
 
-        public static GltfImage GltfImageFactory(Gltf pRoot, ImageInfo pImageInfo, IBLogger pLog, gltfParams pParams) {
+        public static GltfImage GltfImageFactory(Gltf pRoot, ImageInfo pImageInfo, BLogger pLog, gltfParams pParams) {
             if (!pRoot.images.TryGetValue(pImageInfo.GetBHash(), out GltfImage img)) {
                 img = new GltfImage(pRoot, pImageInfo, pLog, pParams);
             }
@@ -1480,7 +1480,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfExtensions extensions;
         public GltfAttributes extras;
 
-        public GltfSampler(Gltf pRoot, string pID, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfSampler(Gltf pRoot, string pID, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             gltfRoot.samplers.Add(new BHashULong(gltfRoot.samplers.Count), this);
             LogGltf("{0} GltfSampler: created empty. ID={1}", "Gltf", ID);
         }
@@ -1509,7 +1509,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfExtensions extensions;
         public GltfAttributes extras;
 
-        public GltfLight(Gltf pRoot, string pID, MaterialInfo pMatInfo, IBLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
+        public GltfLight(Gltf pRoot, string pID, MaterialInfo pMatInfo, BLogger pLog, gltfParams pParams) : base(pRoot, pID, pLog, pParams) {
             // gltfRoot.lights.Add(new BHashULong(gltfRoot.samplers.Count), this);
             LogGltf("{0} GltfLight: created empty. ID={1}", "Gltf", ID);
         }
@@ -1553,7 +1553,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public static string valTransparency = "transparency";  // transparency of surface (float)
         public static string valTransparent = "transparent";  // whether the surface has transparency ('true' or 'false;)
 
-        public GltfExtension(Gltf pRoot, string extensionName, IBLogger pLog, gltfParams pParams) : base(pRoot, extensionName, pLog, pParams) {
+        public GltfExtension(Gltf pRoot, string extensionName, BLogger pLog, gltfParams pParams) : base(pRoot, extensionName, pLog, pParams) {
             pRoot.UsingExtension(extensionName);
             values = new GltfAttributes();
             LogGltf("{0} GltfExtension: created empty. ID={1}", "Gltf", ID);

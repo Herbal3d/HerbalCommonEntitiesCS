@@ -36,10 +36,10 @@ namespace org.herbal3d.cs.CommonEntities {
         private MeshmerizerR _mesher;
         static private readonly String _logHeader = "[PrimToMesh]";
 
-        private readonly IBLogger _log;
+        private readonly BLogger _log;
         private readonly BConverterOSParams _params;
 
-        public PrimToMesh(IBLogger pLog, BConverterOSParams pParams) {
+        public PrimToMesh(BLogger pLog, BConverterOSParams pParams) {
             _mesher = new MeshmerizerR();
             _log = pLog;
             _params = pParams;

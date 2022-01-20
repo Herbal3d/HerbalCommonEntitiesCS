@@ -40,13 +40,13 @@ namespace org.herbal3d.cs.CommonEntities {
 #pragma warning disable 414
         private readonly string _logHeader = "[ImageInfo]";
 #pragma warning restore 414
-        private readonly IBLogger _log;
+        private readonly BLogger _log;
         private readonly IParameters _params;
 
-        public ImageInfo(IBLogger pLog) : this(new EntityHandleUUID(), pLog){
+        public ImageInfo(BLogger pLog) : this(new EntityHandleUUID(), pLog){
         }
 
-        public ImageInfo(EntityHandle pHandle, IBLogger pLog) {
+        public ImageInfo(EntityHandle pHandle, BLogger pLog) {
             handle = pHandle;
             imageIdentifier = handle.GetUUID(); // image is unique unless underlying set
             _log = pLog;

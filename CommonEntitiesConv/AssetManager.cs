@@ -26,7 +26,7 @@ namespace org.herbal3d.cs.CommonEntities {
     #pragma warning disable 414
         private readonly string _logHeader = "[AssetManager]";
     #pragma warning restore 414
-        protected readonly IBLogger _log;
+        protected readonly BLogger _log;
         protected readonly IParameters _params;
 
         public OSAssetFetcher OSAssets;
@@ -34,7 +34,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public BAssetStorage AssetStorage;
 
         public AssetManager(IAssetService pAssetService,
-                            IBLogger logger,
+                            BLogger logger,
                             string outputDir,
                             bool useDeepFilenames = false) {
 

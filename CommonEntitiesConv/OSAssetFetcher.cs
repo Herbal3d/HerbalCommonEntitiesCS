@@ -42,12 +42,12 @@ namespace org.herbal3d.cs.CommonEntities {
     #pragma warning disable 414
         private readonly string _logHeader = "[OSAssetFetcher]";
     #pragma warning restore 414
-        protected readonly IBLogger _log;
+        protected readonly BLogger _log;
         protected readonly IParameters _params;
 
         private IAssetService _assetService;
 
-        public OSAssetFetcher(IAssetService pAssetService, IBLogger pLog) {
+        public OSAssetFetcher(IAssetService pAssetService, BLogger pLog) {
             _assetService = pAssetService;
             _log = pLog;
         }

@@ -41,9 +41,9 @@ namespace org.herbal3d.cs.CommonEntities {
         private static readonly string _logHeader = "[BConverterOS]";
 
         private readonly BConverterOSParams _params;
-        private readonly IBLogger _log;
+        private readonly BLogger _log;
 
-        public BConverterOS(IBLogger pLog, BConverterOSParams pParams) {
+        public BConverterOS(BLogger pLog, BConverterOSParams pParams) {
             _log = pLog;
             _params = pParams;
         }

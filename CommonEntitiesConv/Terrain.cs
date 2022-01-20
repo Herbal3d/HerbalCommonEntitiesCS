@@ -45,7 +45,7 @@ namespace org.herbal3d.cs.CommonEntities {
                             string convoarId,
                             bool halfRezTerrain,
                             bool createTerrainSplat,
-                            IBLogger logger) {
+                            BLogger logger) {
 
             ITerrainChannel terrainDef = scene.Heightmap;
             int XSize = terrainDef.Width;

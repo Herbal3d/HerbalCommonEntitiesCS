@@ -28,9 +28,9 @@ namespace org.herbal3d.cs.CommonEntities {
         private static readonly string _logHeader = "[AssetFetcher]";
 #pragma warning restore 414
 
-        protected readonly IBLogger _log;
+        protected readonly BLogger _log;
 
-        public BAssets(IBLogger pLog) {
+        public BAssets(BLogger pLog) {
             _log = pLog;
             Displayables = new Dictionary<BHash, Displayable>();
             Renderables = new Dictionary<BHash, DisplayableRenderable>();

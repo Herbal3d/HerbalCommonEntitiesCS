@@ -30,9 +30,9 @@ namespace org.herbal3d.cs.CommonEntities {
 #pragma warning restore 414
         protected string _outputDir;
         protected bool _useDeepFilenames;
-        protected readonly IBLogger _log;
+        protected readonly BLogger _log;
 
-        public BAssetStorage(IBLogger logger, string outputDir, bool useDeepFilenames) {
+        public BAssetStorage(BLogger logger, string outputDir, bool useDeepFilenames) {
             _log = logger;
             _outputDir = outputDir;
             _useDeepFilenames = useDeepFilenames;
