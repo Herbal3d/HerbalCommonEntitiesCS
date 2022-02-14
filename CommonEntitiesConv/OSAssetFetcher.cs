@@ -38,6 +38,7 @@ using org.herbal3d.cs.CommonUtil;
 namespace org.herbal3d.cs.CommonEntities {
 
     // Fetch an asset from  the OpenSimulator asset system
+    // Task based access to OpenSimualator assets
     public class OSAssetFetcher : IDisposable{
     #pragma warning disable 414
         private readonly string _logHeader = "[OSAssetFetcher]";
@@ -67,8 +68,9 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         /// <summary>
-        /// Fetch a texture and return an OMVA.AssetTexture. The only information initialized
+        /// Fetch a texture and return an Image. The only information initialized
         /// in the AssetTexture is the UUID and the binary data.
+        /// The raw asset is converted into a Image from its internal JPEG2000 or TGA.
         /// </summary>
         /// <param name="handle"></param>
         /// <returns></returns>

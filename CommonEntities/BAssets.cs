@@ -68,8 +68,9 @@ namespace org.herbal3d.cs.CommonEntities {
             bool ret = false;
             BHash dispHash = disp.GetBHash();
             lock (Displayables) {
-                if (!Displayables.TryGetValue(dispHash, out Displayable maybeDisp)) {
+                if (!Displayables.ContainsKey(dispHash)) {
                     Displayables.Add(dispHash, disp);
+                    ret = true;
                 }
             }
             return ret;
@@ -112,9 +113,10 @@ namespace org.herbal3d.cs.CommonEntities {
         // Add the passed MeshInfo the to list if it is not already in the list
         public void AddUniqueMeshInfo(MeshInfo meshInfo) {
             lock (Meshes) {
-                if (!Meshes.TryGetValue(meshInfo.GetBHash(), out MeshInfo existingMeshInfo)) {
+                BHash meshInfoHash = meshInfo.GetBHash();
+                if (!Meshes.ContainsKey(meshInfoHash)) {
                     // If not already in the list, add this MeshInfo
-                    Meshes.Add(meshInfo.GetBHash(), meshInfo.handle, meshInfo);
+                    Meshes.Add(meshInfoHash, meshInfo.handle, meshInfo);
                 }
             }
         }
@@ -151,10 +153,11 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // Add the passed MaterialInfo the to list if it is not already in the list
         public void AddUniqueMatInfo(MaterialInfo matInfo) {
+            BHash matInfoHash = matInfo.GetBHash();
             lock (Materials) {
-                if (!Materials.TryGetValue(matInfo.GetBHash(), out MaterialInfo existingMatInfo)) {
+                if (!Materials.ContainsKey(matInfoHash)) {
                     // If not already in the list, add this MeshInfo
-                    Materials.Add(matInfo.GetBHash(), matInfo.handle, matInfo);
+                    Materials.Add(matInfoHash, matInfo.handle, matInfo);
                 }
             }
         }
@@ -185,10 +188,11 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // Add the passed MaterialInfo the to list if it is not already in the list
         public void AddUniqueImageInfo(ImageInfo imgInfo) {
+            BHash imageInfohash = imgInfo.GetBHash();
             lock (Images) {
-                if (!Images.TryGetValue(imgInfo.GetBHash(), out ImageInfo existingImageInfo)) {
+                if (!Images.ContainsKey(imageInfohash)) {
                     // If not already in the list, add this MeshInfo
-                    Images.Add(imgInfo.GetBHash(), imgInfo.handle, imgInfo);
+                    Images.Add(imageInfohash, imgInfo.handle, imgInfo);
                 }
             }
         }

@@ -24,7 +24,24 @@ using org.herbal3d.cs.CommonUtil;
 
 namespace org.herbal3d.cs.CommonEntities {
 
-    public class BAssetStorage : IDisposable {
+    public interface IBAssetStorage {
+        Task<byte[]> Fetch(EntityHandle pHandle);
+        Task<byte[]> Fetch(string pEntityName);
+        Task<Stream> GetStream(string pEntityName);
+        Task Store(EntityHandle pHandle, byte[] pData);
+        Task Store(string pEntityName, byte[] pData);
+        Task<string> FetchText(EntityHandle pHandle);
+        Task<string> FetchText(string pEntityName);
+        Task StoreText(EntityHandle pHandle, string pContents);
+        Task StoreText(string pEntityName, string pContents);
+        string GetStorageDir(string pStorageName);
+
+    }
+    /// <summary>
+    /// Storage of Basil assets in the filesystem based on entity names.
+    /// Interface is all Task based.
+    /// </summary>
+    public class BAssetStorage : IBAssetStorage, IDisposable {
     #pragma warning disable 414
         private readonly string _logHeader = "[BAssetStorage]";
 #pragma warning restore 414
@@ -137,6 +154,12 @@ namespace org.herbal3d.cs.CommonEntities {
             await Store(pEntityName, Encoding.UTF8.GetBytes(pContents));
         }
 
+        /// <summary>
+        /// Build a directory for the asset.
+        /// Uses the asset's name as a filename and uses the PersistRules to build a filename.
+        /// </summary>
+        /// <param name="pStorageName"></param>
+        /// <returns></returns>
         public string GetStorageDir(string pStorageName) {
             string strippedStorageName = Path.GetFileNameWithoutExtension(pStorageName);
             return PersistRules.StorageDirectory(strippedStorageName, _outputDir, _useDeepFilenames);

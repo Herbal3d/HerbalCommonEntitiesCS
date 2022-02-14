@@ -50,7 +50,12 @@ namespace org.herbal3d.cs.CommonEntities {
         /// This just deals the making a mesh from the SOP and getting the material/texture of the meshes
         ///    into the caches.
         /// </summary>
-        // Returns 'null' if the SOG/SOP could not be converted into a displayable
+        /// <param name="prim">the prim to convert</param>
+        /// <param name="sog">the Scene Object Group that contains the prim</param>
+        /// <param name="sop">the Scene Object Part that contains the prim</param>
+        /// <param name="assetManager">asset fetcher to use to get required pieces (image for sculpty, ...)</param>
+        /// <param name="lod"></param>
+        /// <returns> Returns 'null' if the SOG/SOP could not be converted into a displayable </returns>
         public async Task<Displayable> CreateMeshResource(SceneObjectGroup sog, SceneObjectPart sop,
                     OMV.Primitive prim, AssetManager assetManager, OMVR.DetailLevel lod) {
 
@@ -113,11 +118,28 @@ namespace org.herbal3d.cs.CommonEntities {
             return attributes;
         }
 
+        /// <summary>
+        /// Convert the mesh into a DisplayableRenderable.
+        /// 
+        /// Note that this could return a copy that is already in the assets storage (remove duplicates).
+        /// To do this, it must convert this passed mesh into a DisplayableRenderable to create the
+        /// meshes hash and then using that hash to look for the mesh in the asset store.
+        /// </summary>
+        /// <param name="sog"></param>
+        /// <param name="sop"></param>
+        /// <param name="prim"></param>
+        /// <param name="assetManager"></param>
+        /// <param name="lod"></param>
+        /// <returns></returns>
         private async Task<DisplayableRenderable> MeshFromPrimShapeData(SceneObjectGroup sog, SceneObjectPart sop,
                                 OMV.Primitive prim, AssetManager assetManager, OMVR.DetailLevel lod) {
+            // Convert the prim into a mesh
             OMVR.FacetedMesh mesh = _mesher.GenerateFacetedMesh(prim, lod);
+            // Convert the mesh into a displayable
             DisplayableRenderable dr = await ConvertFacetedMeshToDisplayable(assetManager, mesh, prim.Textures.DefaultTexture, prim.Scale);
+            // Get the hash for this converted prim/mesh
             BHash drHash = dr.GetBHash();
+            // Get the displayable that is already in the asset store or use the one we just built
             DisplayableRenderable realDR = assetManager.Assets.GetRenderable(drHash, () => { return dr; });
             LogBProgress("{0} MeshFromPrimShapeData. numGenedMeshed={1}",
                     _logHeader, ((RenderableMeshGroup)realDR).meshes.Count);
@@ -148,7 +170,9 @@ namespace org.herbal3d.cs.CommonEntities {
                 OMVR.FacetedMesh fMesh = _mesher.GenerateFacetedSculptMesh(prim, scupltTexture, lod);
                 DisplayableRenderable dr =
                         await ConvertFacetedMeshToDisplayable(assetManager, fMesh, prim.Textures.DefaultTexture, prim.Scale);
+                // Get the hash for this converted prim/mesh
                 BHash drHash = dr.GetBHash();
+                // Get the displayable that is already in the asset store or use the one we just built
                 realDR = assetManager.Assets.GetRenderable(drHash, () => { return dr; });
                 LogBProgress("{0} MeshFromPrimSculptData. numFaces={1}, numGenedMeshed={2}",
                                 _logHeader, fMesh.Faces.Count, ((RenderableMeshGroup)realDR).meshes.Count);

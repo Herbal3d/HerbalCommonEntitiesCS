@@ -22,6 +22,8 @@ using OpenSim.Services.Interfaces;
 using org.herbal3d.cs.CommonUtil;
 
 namespace org.herbal3d.cs.CommonEntities {
+
+    // Container class for fetching and storing Loden's view of OpenSim assets
     public class AssetManager : IDisposable {
     #pragma warning disable 414
         private readonly string _logHeader = "[AssetManager]";
