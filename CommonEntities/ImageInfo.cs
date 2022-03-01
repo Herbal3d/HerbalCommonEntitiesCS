@@ -15,10 +15,12 @@
  */
 
 using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
+// using System.Drawing;
+// using System.Drawing.Drawing2D;
+// using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 using OMV = OpenMetaverse;
 
@@ -31,7 +33,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public OMV.UUID imageIdentifier;
         public bool hasTransprency = false;
         public bool resizable = true;   // true if image can be reduced in size
-        public Image image = null;
+        public Image<Rgba32> image = null;
         public int xSize = 0;
         public int ySize = 0;
 
@@ -57,14 +59,20 @@ namespace org.herbal3d.cs.CommonEntities {
         public ImageInfo Clone() {
             ImageInfo ret = new ImageInfo(_log);
             if (image != null) {
-                ret.SetImage((Image)image.Clone());
+                // Not sure which operation to use. Which is the quickest?
+                // ret.SetImage(image.Clone(x => x.Resize(image.Width, image.Height)));
+                // ret.SetImage(image.Clone(x => x.Crop(image.Width, image.Height)));
+                ret.SetImage(image.CloneAs<Rgba32>());
             }
             return ret;
         }
 
         // Set the image into this structure and update all the auxillery info
         public void SetImage(Image pImage) {
-            image = pImage;
+            image = pImage as Image<Rgba32>;
+            if (image is null) {
+                throw new ArgumentException("ImageInfo.SetImage: Passed image not convertable to Image<Rgba32>");
+            }
             xSize = image.Width;
             ySize = image.Height;
             hasTransprency = CheckForTransparency();
@@ -82,18 +90,20 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         // Check the image in this TextureInfo for transparency and set this.hasTransparency.
-        public bool CheckForTransparency() {
-            hasTransprency = false;
-            if (image != null) {
-                if (Image.IsAlphaPixelFormat(image.PixelFormat)) {
-                    // The image could have alpha values in it
-                    if (image is Bitmap bitmapImage) {
-                        for (int xx = 0; xx < bitmapImage.Width; xx++) {
-                            for (int yy = 0; yy < bitmapImage.Height; yy++) {
-                                if (bitmapImage.GetPixel(xx, yy).A != 255) {
-                                    hasTransprency = true;
-                                    break;
-                                }
+        // Since images without transparancy just have the alpha channel as 255, we
+        //    must scan the pixels to verify there is not transparancy.
+        // One can pass the previous value of hasTransparancy to skip a rescan.
+        public bool CheckForTransparency(bool? alreadyHas = false) {
+            bool hasTransprency = alreadyHas ?? false;
+            Rgba32 transparent = Color.Transparent;
+            if (image != null && !hasTransprency) {
+                if (image.PixelType.AlphaRepresentation != null) {
+                    for (int xx = 0; xx < image.Width; xx++) {
+                        for (int yy = 0; yy < image.Height; yy++) {
+                            var pixel = image[xx, yy];
+                            if (pixel.A != transparent.A) {
+                                hasTransprency = true;
+                                break;
                             }
                         }
                     }
@@ -111,16 +121,19 @@ namespace org.herbal3d.cs.CommonEntities {
             bool ret = false;
             int size = maxTextureSize;
             if (image != null && (image.Width > size || image.Height > size)) {
+                /*
                 int sizeW = size;
                 int sizeH = size;
-                /*
-                if (inImage.Width > size) {
-                    sizeH = (int)(inImage.Height * (size / inImage.Width));
+                */
+                int sizeW = image.Width;
+                int sizeH = image.Height;
+                if (image.Width > size) {
+                    sizeH = (int)(image.Height * (size / image.Width));
                 }
                 else {
-                    sizeW = (int)(inImage.Width * (size / inImage.Height));
+                    sizeW = (int)(image.Width * (size / image.Height));
                 }
-                */
+                /*
                 Image thumbNail = new Bitmap(sizeW, sizeH, image.PixelFormat);
                 using (Graphics g = Graphics.FromImage(thumbNail)) {
                     g.CompositingQuality = CompositingQuality.HighQuality;
@@ -132,6 +145,8 @@ namespace org.herbal3d.cs.CommonEntities {
                 image = thumbNail;
                 xSize = thumbNail.Width;
                 ySize = thumbNail.Height;
+                */
+                image = image.Clone(x => x.Resize(sizeW, sizeH));
                 ComputeImageHash();
                 ret = true;
             }
@@ -142,6 +157,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public void ComputeImageHash() {
             BHasher hasher = new BHasherSHA256();
             if (image != null) {
+                /*
                 // ImageConverter is not available in .NET Core
                 // ImageConverter converter = new ImageConverter();
                 // byte[] data = (byte[])converter.ConvertTo(image, typeof(byte[]));
@@ -149,6 +165,12 @@ namespace org.herbal3d.cs.CommonEntities {
                 image.Save(ms, ImageFormat.Png);
                 byte[] data = ms.ToArray();
                 _imageHash = hasher.Finish(data, 0, data.Length);
+                */
+                // byte[] pixelBytes = new byte[image.Width * image.Height * Unsafe.Sizeof<Rgba32>()];
+                int pixelBytesSize = image.Width * image.Height * 4;
+                byte[] pixelBytes = new byte[pixelBytesSize];
+                image.CopyPixelDataTo(pixelBytes);
+                _imageHash = hasher.Finish(pixelBytes, 0, pixelBytesSize - 1);
             }
             else {
                 // If there isn't an image, use the UUID
