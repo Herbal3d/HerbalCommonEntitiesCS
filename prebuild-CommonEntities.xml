@@ -19,15 +19,11 @@
       <Reference name="System.Drawing"/>
       <Reference name="System.Net.Http"/>
       <Reference name="System.Reflection"/>
-      <Reference name="Mono.Addins"/>
 
       <Reference name="OpenMetaverse"/>
       <Reference name="OpenMetaverseTypes"/>
 
       <Reference name="Herbal3d.CommonUtil" />
-
-      <Reference name="Nini" />
-      <Reference name="log4net"/>
 
       <Files>
         <Match pattern="*.cs" recurse="true">
