@@ -126,8 +126,9 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // Static constants used to transform Zup coordinates to Yup coordinates
         public static OMV.Quaternion coordTransformQZupToYup = OMV.Quaternion.CreateFromAxisAngle(1.0f, 0.0f, 0.0f, -(float)Math.PI / 2f);
-                    // Make a clean matrix version.
-                    // The libraries tend to create matrices with small numbers (1.119093e-07) for zero.
+        // public static OMV.Quaternion coordTransformQZupToYup = new OMV.Quaternion(-(float)Math.PI/4f, 0.0f, 0.0f, (float)Math.PI / 4f);
+        // Make a clean matrix version.
+        // The libraries tend to create matrices with small numbers (1.119093e-07) for zero.
         public static OMV.Matrix4 coordTransformZupToYup= new OMV.Matrix4(
                                     1, 0, 0, 0,
                                     0, 0, -1, 0,
@@ -202,6 +203,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public static OMV.Quaternion ConvertZupToYup(OMV.Quaternion pRot) {
             // return pRot * coordTransformQZupToYup;
             return coordTransformQZupToYup * pRot;
+            // return new OMV.Quaternion(pRot.X, pRot.Z, -pRot.Y, pRot.W);
         }
 
     }
