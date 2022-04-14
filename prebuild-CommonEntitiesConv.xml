@@ -18,6 +18,7 @@
       <Reference name="System.Data.DataSetExtensions"/>
       <Reference name="System.Drawing"/>
       <Reference name="System.Net.Http"/>
+      <Reference name="System.Numerics"/>
       <Reference name="System.Reflection"/>
       <Reference name="Mono.Addins"/>
 

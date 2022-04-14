@@ -15,16 +15,13 @@
  */
 
 using System;
-
-using org.herbal3d.cs.CommonEntitiesUtil;
-
-using OMV = OpenMetaverse;
+using System.Numerics;
 
 namespace org.herbal3d.cs.CommonEntities {
     public class BInstance {
         public EntityHandle handle = new EntityHandleUUID();
-        public OMV.Vector3 Position = OMV.Vector3.Zero;
-        public OMV.Quaternion Rotation = OMV.Quaternion.Identity;
+        public Vector3 Position = Vector3.Zero;
+        public Quaternion Rotation = Quaternion.Identity;
         public CoordAxis coordAxis = new CoordAxis(CoordAxis.RightHand_Zup);    // SL coordinates
         public Displayable Representation;
 

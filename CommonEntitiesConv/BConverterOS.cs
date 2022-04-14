@@ -15,6 +15,7 @@
  */
 
 using System;
+using System.Numerics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -171,9 +172,11 @@ namespace org.herbal3d.cs.CommonEntities {
                 assetManager.Assets.AddUniqueDisplayable(rootDisplayable);
 
                 // Package the Displayable into an instance that is position in the world
+                var pos = sog.AbsolutePosition;
+                var rot = sog.GroupRotation;
                 ret = new BInstance {
-                    Position = sog.AbsolutePosition,
-                    Rotation = sog.GroupRotation,
+                    Position = new Vector3(pos.X, pos.Y, pos.Z),
+                    Rotation = new Quaternion(rot.X, rot.Y, rot.Z, rot.W),
                     Representation = rootDisplayable
                 };
 

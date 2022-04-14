@@ -31,10 +31,33 @@ namespace org.herbal3d.cs.CommonEntities {
         public OMV.UUID imageIdentifier;
         public bool hasTransprency = false;
         public bool resizable = true;   // true if image can be reduced in size
-        public Image image = null;
+        public Image image {
+            get { return _image; }
+            set {
+                _image = value;
+                if (_image != null) {
+                    xSize = image.Width;
+                    ySize = image.Height;
+                    hasTransprency = _checkForTransparency();
+                    _convertToOutputBytes();
+                    _computeImageHash();
+                    // _log.DebugFormat("{0} SetImage. ID={1}, xSize={2}, ySize={3}, hasTrans={4}",
+                    //             _logHeader, handle, xSize, ySize, hasTransprency);
+                }
+                else {
+                    xSize = 0;
+                    ySize = 0;
+                    hasTransprency = false;
+                    _image = null;
+                    _convertedImage = null;
+                }
+            }
+        }
         public int xSize = 0;
         public int ySize = 0;
 
+        private Image _image;
+        private byte[] _convertedImage;
         private BHash _imageHash;
 
 #pragma warning disable 414
@@ -56,21 +79,24 @@ namespace org.herbal3d.cs.CommonEntities {
         // THis creates a copy of the image so it can be modified without touching the original.
         public ImageInfo Clone() {
             ImageInfo ret = new ImageInfo(_log);
-            if (image != null) {
-                ret.SetImage((Image)image.Clone());
-            }
+            ret.image = (Image)_image.Clone();
             return ret;
         }
 
-        // Set the image into this structure and update all the auxillery info
-        public void SetImage(Image pImage) {
-            image = pImage;
-            xSize = image.Width;
-            ySize = image.Height;
-            hasTransprency = CheckForTransparency();
-            ComputeImageHash();
-            // _log.DebugFormat("{0} SetImage. ID={1}, xSize={2}, ySize={3}, hasTrans={4}",
-            //             _logHeader, handle, xSize, ySize, hasTransprency);
+        // Set the image into this structure and update all the auxillery info.
+        // Equivalent to setting this.image but with the option to resize the image.
+        public void SetImage(Image pImage, int pXsize = 0, int pYsize = 0) {
+            _image = pImage;
+            if (pXsize != 0 || pYsize != 0) {
+                _constrainTextureSize(Math.Min(pXsize, pYsize));
+            }
+            image = _image;
+
+        }
+
+        // Get the image as bytes converted into the output format (PNG, JPEG, ...)
+        public byte[] GetConvertedImage() {
+            return _convertedImage;
         }
 
         // The hash code for an image is just the hash of its UUID handle.
@@ -82,7 +108,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         // Check the image in this TextureInfo for transparency and set this.hasTransparency.
-        public bool CheckForTransparency() {
+        private bool _checkForTransparency() {
             hasTransprency = false;
             if (image != null) {
                 if (Image.IsAlphaPixelFormat(image.PixelFormat)) {
@@ -108,9 +134,40 @@ namespace org.herbal3d.cs.CommonEntities {
         /// <param name="maxTextureSize"></param>
         /// <returns>'true' if the image was converted</returns>
         public bool ConstrainTextureSize(int maxTextureSize) {
+            bool ret = _constrainTextureSize(maxTextureSize);
+            if (_image != null) {
+                _convertToOutputBytes();
+                _computeImageHash();
+            }
+            return ret;
+        }
+
+        // The image is supplied as a System.Drawing.Image but it is output
+        //     as one of the world known image formats (PNG, JPG, ...).
+        // This converts the passed Image to the output format in bytes.
+        // This byte form is used for hashing and for output (through GLTF).
+        private void _convertToOutputBytes() {
+            if (image != null) {
+                // ImageConverter is not available in .NET Core
+                // ImageConverter converter = new ImageConverter();
+                // byte[] data = (byte[])converter.ConvertTo(image, typeof(byte[]));
+                // var outFormat = PersistRules.TargetTypeToImageFormat(PersistRules.TextureFormatToTargetType[_params.preferredTextureFormatIfNoTransparency.ToLower()]);
+                var outFormat = ImageFormat.Jpeg;
+                if (this.hasTransprency) {
+                    // outFormat = PersistRules.TargetTypeToImageFormat(PersistRules.TextureFormatToTargetType[_params.preferredTextureFormat.ToLower()]);
+                    outFormat = ImageFormat.Png;
+                }
+
+                MemoryStream ms = new MemoryStream();
+                image.Save(ms, outFormat);
+                _convertedImage = ms.ToArray();
+            }
+        }
+
+        private bool _constrainTextureSize(int maxTextureSize) {
             bool ret = false;
             int size = maxTextureSize;
-            if (image != null && (image.Width > size || image.Height > size)) {
+            if (_image != null && this.resizable && (_image.Width > size || _image.Height > size)) {
                 int sizeW = size;
                 int sizeH = size;
                 /*
@@ -121,7 +178,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     sizeW = (int)(inImage.Width * (size / inImage.Height));
                 }
                 */
-                Image thumbNail = new Bitmap(sizeW, sizeH, image.PixelFormat);
+                Image thumbNail = new Bitmap(sizeW, sizeH, _image.PixelFormat);
                 using (Graphics g = Graphics.FromImage(thumbNail)) {
                     g.CompositingQuality = CompositingQuality.HighQuality;
                     g.SmoothingMode = SmoothingMode.HighQuality;
@@ -129,26 +186,19 @@ namespace org.herbal3d.cs.CommonEntities {
                     Rectangle rect = new Rectangle(0, 0, sizeW, sizeH);
                     g.DrawImage(image, rect);
                 }
-                image = thumbNail;
+                _image = thumbNail;
                 xSize = thumbNail.Width;
                 ySize = thumbNail.Height;
-                ComputeImageHash();
                 ret = true;
             }
             return ret;
         }
 
         // Computes a SHA256 hash of the image
-        public void ComputeImageHash() {
+        private void _computeImageHash() {
             BHasher hasher = new BHasherSHA256();
-            if (image != null) {
-                // ImageConverter is not available in .NET Core
-                // ImageConverter converter = new ImageConverter();
-                // byte[] data = (byte[])converter.ConvertTo(image, typeof(byte[]));
-                MemoryStream ms = new MemoryStream();
-                image.Save(ms, ImageFormat.Png);
-                byte[] data = ms.ToArray();
-                _imageHash = hasher.Finish(data, 0, data.Length);
+            if (_convertedImage != null) {
+                _imageHash = hasher.Finish(_convertedImage, 0, _convertedImage.Length);
             }
             else {
                 // If there isn't an image, use the UUID
