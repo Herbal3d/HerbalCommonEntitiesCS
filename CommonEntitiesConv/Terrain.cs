@@ -33,10 +33,6 @@ namespace org.herbal3d.cs.CommonEntities {
 
         private static readonly string LogHeader = "Terrain";
 
-        private bool _halfRezTerrain;
-        private bool _createTerrainSplat;
-        private bool _convoarId;
-
         // Create a mesh for the terrain of the current scene
         public static async Task<BInstance> CreateTerrainMesh(
                             Scene scene,
@@ -76,8 +72,6 @@ namespace org.herbal3d.cs.CommonEntities {
             }
 
             // Number found in RegionSettings.cs as DEFAULT_TERRAIN_TEXTURE_3
-            OMV.UUID convoarID = new OMV.UUID(convoarId);
-
             OMV.UUID defaultTextureID = new OMV.UUID("179cdabd-398a-9b6b-1391-4dc333ba321f");
             OMV.Primitive.TextureEntryFace terrainFace = new OMV.Primitive.TextureEntryFace(null) {
                 TextureID = defaultTextureID

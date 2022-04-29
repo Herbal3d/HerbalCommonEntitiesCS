@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using org.herbal3d.cs.CommonUtil;
 
 using OMV = OpenMetaverse;
+using OMVR = OpenMetaverse.Rendering;
 
 namespace org.herbal3d.cs.CommonEntities {
     /// <summary>
@@ -133,6 +134,34 @@ namespace org.herbal3d.cs.CommonEntities {
                 return this.Attribute<bool>("IsRoot");
             }
         }
+
+        // Do checking on the structure and contents of the displayable
+        public bool Validate(string pCheckName, BLogger pLog = null) {
+            BLogger _log = pLog ?? new BLoggerNull();
+            _log.Debug("Displayable.Validate(): check={0}, name={1}, handle={2}", pCheckName, this.name, this.handle);
+            _log.Debug("    pos={0}, rot={1}, scale={2}", this.offsetPosition, this.offsetPosition, this.scale);
+            RenderableMeshGroup mGroup = this.renderable as RenderableMeshGroup;
+            if (mGroup == null) {
+                _log.Debug("    renderable of type {0}", this.renderable.GetType().ToString());
+            }
+            else {
+                mGroup.Dump(_log, "    ");
+                /*
+                mGroup.meshes.ForEach(m => {
+                    int indx = 0;
+                    m.mesh.vertexs.ForEach(vert => {
+                        var norm = vert.Normal;
+                        if (norm.Length() != 1) {
+                            _log.Debug("        non-unit norm: {0}:{1}", indx, vert);
+                        }
+                        indx++;
+                    });
+                });
+                */
+            }
+
+            return false;
+        }
     }
 
     /// <summary>
@@ -169,6 +198,14 @@ namespace org.herbal3d.cs.CommonEntities {
                 m.GetBHash(hasher);
             }
             return hasher.Finish();
+        }
+
+        public void Dump(BLogger pLog, string pLeader = "    ") {
+            int indx = 1;
+            meshes.ForEach(mesh => {
+                pLog.Debug("{0}[{1}] {2}", pLeader, indx, mesh.ToString());
+                indx++;
+            });
         }
     }
         

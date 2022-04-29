@@ -64,7 +64,6 @@ namespace org.herbal3d.cs.CommonEntities {
         private readonly string _logHeader = "[ImageInfo]";
 #pragma warning restore 414
         private readonly BLogger _log;
-        private readonly IParameters _params;
 
         public ImageInfo(BLogger pLog) : this(new EntityHandleUUID(), pLog){
         }

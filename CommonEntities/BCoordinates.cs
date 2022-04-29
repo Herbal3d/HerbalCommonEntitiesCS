@@ -15,7 +15,6 @@
  */
 
 using System;
-using System.Numerics;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -126,11 +125,11 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         // Static constants used to transform Zup coordinates to Yup coordinates
-        public static Quaternion coordTransformQZupToYup = Quaternion.CreateFromAxisAngle(Vector3.UnitX, -(float)Math.PI / 2f);
+        public static OMV.Quaternion coordTransformQZupToYup = OMV.Quaternion.CreateFromAxisAngle(OMV.Vector3.UnitX, -(float)Math.PI / 2f);
         // public static OMV.Quaternion coordTransformQZupToYup = new OMV.Quaternion(-(float)Math.PI/4f, 0.0f, 0.0f, (float)Math.PI / 4f);
         // Make a clean matrix version.
         // The libraries tend to create matrices with small numbers (1.119093e-07) for zero.
-        public static Matrix4x4 coordTransformZupToYup = new Matrix4x4(
+        public static OMV.Matrix4 coordTransformZupToYup = new OMV.Matrix4(
                                     1, 0, 0, 0,
                                     0, 0, -1, 0,
                                     0, 1, 0, 0,
@@ -146,8 +145,8 @@ namespace org.herbal3d.cs.CommonEntities {
 
             if (inst.coordAxis.system != newCoords.system) {
 
-                Matrix4x4 coordTransform = Matrix4x4.Identity;
-                Quaternion coordTransformQ = Quaternion.Identity;
+                OMV.Matrix4 coordTransform = OMV.Matrix4.Identity;
+                OMV.Quaternion coordTransformQ = OMV.Quaternion.Identity;
                 if (inst.coordAxis.GetUpDimension == CoordAxis.Zup
                     && newCoords.GetUpDimension == CoordAxis.Yup) {
                     // The one thing we know to do is change from Zup to Yup
@@ -157,11 +156,11 @@ namespace org.herbal3d.cs.CommonEntities {
                     coordTransform = coordTransformZupToYup;
                 }
 
-                Vector3 oldPos = inst.Position;   // DEBUG DEBUG
-                Quaternion oldRot = inst.Rotation;   // DEBUG DEBUG
+                OMV.Vector3 oldPos = inst.Position;   // DEBUG DEBUG
+                OMV.Quaternion oldRot = inst.Rotation;   // DEBUG DEBUG
                 // Fix the location in space
                 // inst.Position = inst.Position * coordTransform;
-                inst.Position = new Vector3(inst.Position.X, inst.Position.Z, -inst.Position.Y);
+                inst.Position = new OMV.Vector3(inst.Position.X, inst.Position.Z, -inst.Position.Y);
                 inst.Rotation = coordTransformQ * inst.Rotation;
 
                 inst.coordAxis = newCoords;
@@ -199,11 +198,11 @@ namespace org.herbal3d.cs.CommonEntities {
             return meshInfos;
         }
 
-        public static Vector3 ConvertZupToYup(Vector3 pPos) {
+        public static OMV.Vector3 ConvertZupToYup(OMV.Vector3 pPos) {
             // return pPos * coordTransformQZupToYup;
-            return new Vector3(pPos.X, pPos.Z, -pPos.Y);
+            return new OMV.Vector3(pPos.X, pPos.Z, -pPos.Y);
         }
-        public static Quaternion ConvertZupToYup(Quaternion pRot) {
+        public static OMV.Quaternion ConvertZupToYup(OMV.Quaternion pRot) {
             // return pRot * coordTransformQZupToYup;
             return coordTransformQZupToYup * pRot;
             // return new OMV.Quaternion(pRot.X, pRot.Z, -pRot.Y, pRot.W);

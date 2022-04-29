@@ -29,6 +29,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
     // Parameters used by the Gltf code
     public class gltfParamsB: PersistRulesParams {
+        public string inputOAR = "";
         public string uriBase = "./";
         public int verticesMaxForBuffer = 50000;
         public string gltfCopyright = "Copyright 2022. All rights reserved";
@@ -37,6 +38,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public int textureMaxSize = 256;
         public bool logBuilding = false;
         public bool logGltfBuilding = false;
+        public string versionLong = "1.1.1-20220101-12345678";
     }
 
     // The base class for all of the different types.
@@ -226,8 +228,8 @@ namespace org.herbal3d.cs.CommonEntities {
                 Displayable rootDisp = pInstance.Representation;
                 // _log.DebugFormat("Gltf.LoadScene: Loading node {0}", rootDisp.name);    // DEBUG DEBUG
                 GltfNodeB rootNode = GltfNodeB.GltfNodeFactory(gltfRoot, rootDisp, _log, _params);
-                //RA rootNode.translation = pInstance.Position;
-                //RA rootNode.rotation = pInstance.Rotation;
+                rootNode.translation = pInstance.Position;
+                rootNode.rotation = pInstance.Rotation;
                 // The hash of the node list is never used so we just make something up.
                 gltfScene.nodes.Add(new BHashULong(gltfScene.nodes.Count), rootNode);
             });
@@ -349,7 +351,7 @@ namespace org.herbal3d.cs.CommonEntities {
             paddedSizeofIndices += (padUnit - (paddedSizeofIndices % padUnit)) % padUnit;
 
             // A key added to the buffer, vertices, and indices names to uniquify them
-            string buffNum =  String.Format("{0:000}", buffers.Count + 1);
+            string buffNum = String.Format("{0:000}", buffers.Count + 1);
             string buffName = this.defaultScene.name + "_buffer" + buffNum;
             byte[] binBuffRaw = new byte[paddedSizeofIndices + sizeofVertices];
             GltfBufferB binBuff = new GltfBufferB(gltfRoot, buffName, _log, _params) {
@@ -390,7 +392,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 byteLength = paddedSizeofIndices,
                 byteStride = sizeofOneIndices
             };
-            // binIndicesView.target = WebGLConstants.ELEMENT_ARRAY_BUFFER;
+            binIndicesView.target = WebGLConstants.ELEMENT_ARRAY_BUFFER;
 
             GltfBufferViewB binVerticesView = new GltfBufferViewB(gltfRoot, "viewVertices" + buffNum, _log, _params) {
                 buffer = binBuff,
@@ -398,7 +400,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 byteLength = vertexCollection.Count * 3 * sizeof(float),
                 byteStride = 3 * sizeof(float)
             };
-            // binVerticesView.target = WebGLConstants.ARRAY_BUFFER;
+            binVerticesView.target = WebGLConstants.ARRAY_BUFFER;
 
             GltfBufferViewB binNormalsView = new GltfBufferViewB(gltfRoot, "normals" + buffNum, _log, _params) {
                 buffer = binBuff,
@@ -406,7 +408,7 @@ namespace org.herbal3d.cs.CommonEntities {
                 byteLength = vertexCollection.Count * 3 * sizeof(float),
                 byteStride = 3 * sizeof(float)
             };
-            // binNormalsView.target = WebGLConstants.ARRAY_BUFFER;
+            binNormalsView.target = WebGLConstants.ARRAY_BUFFER;
 
             GltfBufferViewB binTexCoordView = new GltfBufferViewB(gltfRoot, "texCoord" + buffNum, _log, _params) {
                 buffer = binBuff,
@@ -414,36 +416,53 @@ namespace org.herbal3d.cs.CommonEntities {
                 byteLength = vertexCollection.Count * 2 * sizeof(float),
                 byteStride = 2 * sizeof(float)
             };
-            // binTexCoordView.target = WebGLConstants.ARRAY_BUFFER;
+            binTexCoordView.target = WebGLConstants.ARRAY_BUFFER;
 
             // Gltf requires min and max values for all the mesh vertex collections
-            OMV.Vector3 vmin = new OMV.Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            OMV.Vector3 vmax = new OMV.Vector3(float.MinValue, float.MinValue, float.MinValue);
-            OMV.Vector3 nmin = new OMV.Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-            OMV.Vector3 nmax = new OMV.Vector3(float.MinValue, float.MinValue, float.MinValue);
-            OMV.Vector2 umin = new OMV.Vector2(float.MaxValue, float.MaxValue);
-            OMV.Vector2 umax = new OMV.Vector2(float.MinValue, float.MinValue);
+            float vminx, vminy, vminz;
+            vminx = vminy = vminz = float.MaxValue;
+            float vmaxx, vmaxy, vmaxz;
+            vmaxx = vmaxy = vmaxz = float.MinValue;
+
+            float nminx, nminy, nminz;
+            nminx = nminy = nminz = float.MaxValue;
+            float nmaxx, nmaxy, nmaxz;
+            nmaxx = nmaxy = nmaxz = float.MinValue;
+
+            float uminx, uminy;
+            uminx = uminy = float.MaxValue;
+            float umaxx, umaxy;
+            umaxx = umaxy = float.MinValue;
+
             vertexCollection.ForEach(vert => {
-                // OMV.Vector3 has a Min and Max function but it does a 'new' which causes lots of GC thrash
-                vmin.X = Math.Min(vmin.X, vert.Position.X);
-                vmin.Y = Math.Min(vmin.Y, vert.Position.Y);
-                vmin.Z = Math.Min(vmin.Z, vert.Position.Z);
-                vmax.X = Math.Max(vmax.X, vert.Position.X);
-                vmax.Y = Math.Max(vmax.Y, vert.Position.Y);
-                vmax.Z = Math.Max(vmax.Z, vert.Position.Z);
+                vminx = vminx > vert.Position.X ? vert.Position.X : vminx;
+                vminy = vminy > vert.Position.Y ? vert.Position.Y : vminy;
+                vminz = vminz > vert.Position.Z ? vert.Position.Z : vminz;
+                vmaxx = vmaxx < vert.Position.X ? vert.Position.X : vmaxx;
+                vmaxy = vmaxy < vert.Position.Y ? vert.Position.Y : vmaxy;
+                vmaxz = vmaxz < vert.Position.Z ? vert.Position.Z : vmaxz;
 
-                nmin.X = Math.Min(nmin.X, vert.Normal.X);
-                nmin.Y = Math.Min(nmin.Y, vert.Normal.Y);
-                nmin.Z = Math.Min(nmin.Z, vert.Normal.Z);
-                nmax.X = Math.Max(nmax.X, vert.Normal.X);
-                nmax.Y = Math.Max(nmax.Y, vert.Normal.Y);
-                nmax.Z = Math.Max(nmax.Z, vert.Normal.Z);
+                nminx = nminx > vert.Normal.X ? vert.Normal.X : nminx;
+                nminy = nminy > vert.Normal.Y ? vert.Normal.Y : nminy;
+                nminz = nminz > vert.Normal.Z ? vert.Normal.Z : nminz;
+                nmaxx = nmaxx < vert.Normal.X ? vert.Normal.X : nmaxx;
+                nmaxy = nmaxy < vert.Normal.Y ? vert.Normal.Y : nmaxy;
+                nmaxz = nmaxz < vert.Normal.Z ? vert.Normal.Z : nmaxz;
 
-                umin.X = Math.Min(umin.X, vert.TexCoord.X);
-                umin.Y = Math.Min(umin.Y, vert.TexCoord.Y);
-                umax.X = Math.Max(umax.X, vert.TexCoord.X);
-                umax.Y = Math.Max(umax.Y, vert.TexCoord.Y);
+                uminx = uminx > vert.TexCoord.X ? vert.TexCoord.X : uminx;
+                uminy = uminy > vert.TexCoord.Y ? vert.TexCoord.Y : uminy;
+                umaxx = umaxx < vert.TexCoord.X ? vert.TexCoord.X : umaxx;
+                umaxy = umaxy < vert.TexCoord.Y ? vert.TexCoord.Y : umaxy;
             });
+            // Add a little buffer to values which fixes problems with rounding errors
+            /*
+            vmin = TweekMinMax(vmin);
+            vmax = TweekMinMax(vmax);
+            nmin = TweekMinMax(nmin);
+            nmax = TweekMinMax(nmax);
+            umin = TweekMinMax(umin);
+            umax = TweekMinMax(umax);
+            */
 
             // Build one large group of vertices/normals/UVs that the individual mesh
             //     indices will reference. The vertices have been uniquified above.
@@ -453,8 +472,8 @@ namespace org.herbal3d.cs.CommonEntities {
                 byteOffset = 0,
                 componentType = WebGLConstants.FLOAT,
                 type = "VEC3",
-                min = new Object[3] { vmin.X, vmin.Y, vmin.Z },
-                max = new Object[3] { vmax.X, vmax.Y, vmax.Z }
+                min = new Object[3] { vminx, vminy, vminz },
+                max = new Object[3] { vmaxx, vmaxy, vmaxz }
             };
 
             GltfAccessorB normalsAccessor = new GltfAccessorB(gltfRoot, buffName + "_accNor", _log, _params) {
@@ -463,8 +482,8 @@ namespace org.herbal3d.cs.CommonEntities {
                 byteOffset = 0,
                 componentType = WebGLConstants.FLOAT,
                 type = "VEC3",
-                min = new Object[3] { nmin.X, nmin.Y, nmin.Z },
-                max = new Object[3] { nmax.X, nmax.Y, nmax.Z }
+                min = new Object[3] { nminx, nminy, nminz },
+                max = new Object[3] { nmaxx, nmaxy, nmaxz }
             };
 
             GltfAccessorB UVAccessor = new GltfAccessorB(gltfRoot, buffName + "_accUV", _log, _params) {
@@ -475,13 +494,13 @@ namespace org.herbal3d.cs.CommonEntities {
                 type = "VEC2"
             };
             // The values for TexCoords sometimes get odd
-            if (!Single.IsNaN(umin.X) && umin.X > -1000000 && umin.X < 1000000
-                    && !Single.IsNaN(umin.Y) && umin.Y > -1000000 && umin.Y < 1000000) {
-                UVAccessor.min = new Object[2] { umin.X, umin.Y };
+            if (!Single.IsNaN(uminx) && uminx > -1000000 && uminx < 1000000
+                    && !Single.IsNaN(uminy) && uminy > -1000000 && uminy < 1000000) {
+                UVAccessor.min = new Object[2] { uminx, uminy };
             }
-            if (!Single.IsNaN(umax.X) && umax.X > -1000000 && umax.X < 1000000
-                    && !Single.IsNaN(umax.Y) && umax.Y > -1000000 && umax.Y < 1000000) {
-                UVAccessor.max = new Object[2] { umax.X, umax.Y };
+            if (!Single.IsNaN(umaxx) && umaxx > -1000000 && umaxx < 1000000
+                    && !Single.IsNaN(umaxy) && umaxy > -1000000 && umaxy < 1000000) {
+                UVAccessor.max = new Object[2] { umaxx, umaxy };
             }
 
             // For each mesh, copy the indices into the binary output buffer and create the accessors
@@ -527,6 +546,21 @@ namespace org.herbal3d.cs.CommonEntities {
                 prim.normals = normalsAccessor;
                 prim.texcoord = UVAccessor;
             }));
+        }
+
+        private OMV.Vector3 TweekMinMax(OMV.Vector3 pVec) {
+            pVec.X = TweekMinMaxVal(pVec.X);
+            pVec.Y = TweekMinMaxVal(pVec.Y);
+            pVec.Z = TweekMinMaxVal(pVec.Z);
+            return pVec;
+        }
+        private OMV.Vector2 TweekMinMax(OMV.Vector2 pVec) {
+            pVec.X = TweekMinMaxVal(pVec.X);
+            pVec.Y = TweekMinMaxVal(pVec.Y);
+            return pVec;
+        }
+        private float TweekMinMaxVal(float x) {
+            return x + Math.Sign(x) * 0.0001f;
         }
 
         public void ToJSON(StreamWriter outt) {
@@ -642,16 +676,16 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfAssetB(GltfB pRoot, BLogger pLog, gltfParamsB pParams) : base(pRoot, "", pLog, pParams) {
             values = new GltfAttributesB {
                 { "generator", "convoar" },
-                { "version", "2.0" },
+                { "version", "2.0" },   // the GLTF specification version
                 { "copyright", _params.gltfCopyright }
             };
-            /*
-            extras = new GltfAttributes {
-                { "convoarCommit", ConvOAR.Globals.gitCommit },
-                { "convoarVersion", ConvOAR.Globals.version },
-                { "convoarBuildDate", ConvOAR.Globals.buildDate },
+            extras = new GltfAttributesB {
+                { "convoar", new GltfAttributesB {
+                    { "convoarVersion", _params.versionLong },
+                    { "conversionDate", DateTime.UtcNow.ToString() },
+                    { "OARFilename", _params.inputOAR }
+                } }
             };
-            */
         }
 
         public override Object AsJSON() {
@@ -979,6 +1013,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
         protected void MaterialInit(GltfB pRoot, MaterialInfo matInfo, 
                                 BLogger pLog, gltfParamsB pParams) {
+            name = "mat-" + matInfo.GetBHash().ToString();
             extras = new GltfAttributesB();
             topLevelValues = new GltfAttributesB();
             extensions = new GltfExtensionsB(pRoot);
@@ -1103,6 +1138,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public GltfMaterialPbrMetallicRoughnessB(GltfB pRoot, MaterialInfo matInfo, 
                                 BLogger pLog, gltfParamsB pParams) {
             MaterialInit(pRoot, matInfo, pLog, pParams);
+            this.name = "pbr" + this.name;
         }
 
         public override Object AsJSON() {

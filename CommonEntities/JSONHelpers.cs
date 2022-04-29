@@ -96,6 +96,13 @@ namespace org.herbal3d.cs.CommonEntities {
                 // _log.ErrorFormat("JSONHelpers: Value is Double.NaN!!");
                 outt.Write("0");
             }
+            else if (val is float) {
+                // there is some problems with floats being different as binary
+                //     and as text string. Don't know if limiting significant
+                //     digits might help.
+                // outt.Write(((float)val).ToString("0.#######"));
+                outt.Write(((float)val).ToString("G9"));
+            }
             else {
                 var ret = val.ToString();
                 if (ret == "NaN") {
@@ -117,6 +124,8 @@ namespace org.herbal3d.cs.CommonEntities {
             StringBuilder buff = new StringBuilder();
             buff.Append(" [ ");
             bool first = true;
+            // var stringVals = vals.Select(x => x.ToString()).ToArray();
+            // buff.Append(String.Join(",", stringVals));
             foreach (Object obj in vals) {
                 if (!first) buff.Append(", ");
                 buff.Append(obj.ToString());

@@ -73,10 +73,6 @@
     <Prefer32Bit>False</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSJ2K">
-      <Name>CSJ2K</Name>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="log4net">
       <Name>log4net</Name>
       <Private>False</Private>
@@ -105,9 +101,65 @@
       <Name>OpenMetaverseTypes</Name>
       <Private>False</Private>
     </Reference>
+    <Reference Include="OpenSim.Capabilities, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Capabilities.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Data.Null, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Data.Null.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Framework, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Framework.Monitoring, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Framework.Monitoring.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Framework.Serialization, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Framework.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Framework.Servers.HttpServer, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Framework.Servers.HttpServer.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Region.CoreModules, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Region.CoreModules.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Region.Framework, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Region.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Region.PhysicsModule.BasicPhysics, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Region.PhysicsModule.BasicPhysics.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Region.PhysicsModules.SharedBase, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Region.PhysicsModules.SharedBase.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Services.Connectors, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Services.Connectors.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Services.Interfaces, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Services.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenSim.Tests.Common, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\OpenSim.Tests.Common.dll</HintPath>
+    </Reference>
     <Reference Include="PrimMesher">
       <Name>PrimMesher</Name>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="SmartThreadPool, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\SmartThreadPool.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -129,55 +181,14 @@
       <Name>System.Net.Http</Name>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System.Numerics" />
     <Reference Include="System.Reflection">
       <Name>System.Reflection</Name>
       <Private>False</Private>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../CommonEntities/Herbal3d.CommonEntities.csproj">
-      <Name>Herbal3d.CommonEntities</Name>
-      <Project>{1267952C-0000-0000-0000-000000000000}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="../../HerbalCommonUtilCS/Herbal3d.CommonUtil.csproj">
-      <Name>Herbal3d.CommonUtil</Name>
-      <Project>{746CFBEF-0000-0000-0000-000000000000}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="../../../OpenSim/Framework/OpenSim.Framework.csproj">
-      <Name>OpenSim.Framework</Name>
-      <Project>{A857346D-0000-0000-0000-000000000000}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="../../../OpenSim/Region/CoreModules/OpenSim.Region.CoreModules.csproj">
-      <Name>OpenSim.Region.CoreModules</Name>
-      <Project>{F10EC4CB-0000-0000-0000-000000000000}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="../../../OpenSim/Region/Framework/OpenSim.Region.Framework.csproj">
-      <Name>OpenSim.Region.Framework</Name>
-      <Project>{0F1173B6-0000-0000-0000-000000000000}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="../../../OpenSim/Region/PhysicsModules/SharedBase/OpenSim.Region.PhysicsModules.SharedBase.csproj">
-      <Name>OpenSim.Region.PhysicsModules.SharedBase</Name>
-      <Project>{00E55495-0000-0000-0000-000000000000}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="../../../OpenSim/Services/Interfaces/OpenSim.Services.Interfaces.csproj">
-      <Name>OpenSim.Services.Interfaces</Name>
-      <Project>{77CBA120-0000-0000-0000-000000000000}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
-      <Private>False</Private>
-    </ProjectReference>
+    <Reference Include="zlib.net, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\bin\zlib.net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssetManager.cs">
@@ -207,6 +218,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HerbalCommonUtilCS\Herbal3d.CommonUtil.csproj">
+      <Project>{c0dfac61-6999-4278-855f-0e9bca2e8625}</Project>
+      <Name>Herbal3d.CommonUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonEntities\Herbal3d.CommonEntities.csproj">
+      <Project>{1267952c-0000-0000-0000-000000000000}</Project>
+      <Name>Herbal3d.CommonEntities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

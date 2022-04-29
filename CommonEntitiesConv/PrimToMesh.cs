@@ -72,6 +72,7 @@ namespace org.herbal3d.cs.CommonEntities {
                                                 sop.RotationOffset,
                                                 sop.Scale,
                                                 CollectObjectAttributes(sop));
+                        // displayable.Validate("mesh", _log);
                     }
                     else {
                         LogBProgress("{0}: CreateMeshResource: creating sculpty", _logHeader);
@@ -84,6 +85,7 @@ namespace org.herbal3d.cs.CommonEntities {
                                                 sop.RotationOffset,
                                                 sop.Scale,
                                                 CollectObjectAttributes(sop));
+                        // displayable.Validate("sculpt", _log);
                     }
                 }
                 else {
@@ -97,6 +99,7 @@ namespace org.herbal3d.cs.CommonEntities {
                                             sop.RotationOffset,
                                             sop.Scale,
                                             CollectObjectAttributes(sop));
+                    // displayable.Validate("prim", _log);
                 }
             }
             catch (Exception e) {
@@ -266,7 +269,14 @@ namespace org.herbal3d.cs.CommonEntities {
 
             // Copy one face's mesh imformation from the FacetedMesh into a MeshInfo
             MeshInfo meshInfo = new MeshInfo {
-                vertexs = new List<OMVR.Vertex>(face.Vertices),
+                vertexs = face.Vertices.Select(v => {
+                    // Some normals are returned as zero from the meshmerizer
+                    if (v.Normal == OMV.Vector3.Zero) {
+                        v.Normal = OMV.Vector3.UnitX;
+                    }
+                    return v;
+                }).ToList(),
+                // vertexs = new List<OMVR.Vertex>(face.Vertices),
                 indices = face.Indices.ConvertAll(ii => (int)ii),
                 faceCenter = face.Center,
                 scale = primScale

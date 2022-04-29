@@ -19,12 +19,12 @@ using System.Linq;
 using System.Numerics;
 using System.IO;
 
-using SharpGLTF.Schema2;
-using SharpGLTF.Scenes;
-using SharpGLTF.Geometry;
-using SharpGLTF.Materials;
-using SharpGLTF.Memory;
-using SixLabors.ImageSharp;
+//RA using SharpGLTF.Schema2;
+//RA using SharpGLTF.Scenes;
+//RA using SharpGLTF.Geometry;
+//RA using SharpGLTF.Materials;
+//RA using SharpGLTF.Memory;
+//RA using SixLabors.ImageSharp;
 
 using org.herbal3d.cs.CommonUtil;
 
@@ -36,8 +36,8 @@ using OMVR = OpenMetaverse.Rendering;
 namespace org.herbal3d.cs.CommonEntities {
 
     // using MESHBUILDER = MeshBuilder<SharpGLTF.Geometry.VertexTypes.VertexPositionNormal, SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1>;
-    using MESHBUILDER = MeshBuilder<SharpGLTF.Geometry.VertexTypes.VertexPositionNormal, SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1>;
-    using VERTEX = SharpGLTF.Geometry.VertexTypes.VertexPositionNormal;
+    //RA using MESHBUILDER = MeshBuilder<SharpGLTF.Geometry.VertexTypes.VertexPositionNormal, SharpGLTF.Geometry.VertexTypes.VertexColor1Texture1>;
+    //RA using VERTEX = SharpGLTF.Geometry.VertexTypes.VertexPositionNormal;
 
     // Parameters used by the Gltf code
     public class gltfParams: PersistRulesParams {
@@ -61,9 +61,9 @@ namespace org.herbal3d.cs.CommonEntities {
         BLogger _log;
         gltfParams _params;
 
-        ModelRoot _modelRoot;
-        Scene _scene;
-        SceneBuilder _sceneBuilder;
+        //RA ModelRoot _modelRoot;
+        //RA Scene _scene;
+        //RA SceneBuilder _sceneBuilder;
     
         public Gltf(string pSceneName, BLogger pLog, gltfParams pParams) {
             _sceneName = pSceneName;
@@ -74,6 +74,7 @@ namespace org.herbal3d.cs.CommonEntities {
         // Add all the objects from a scene into this empty Gltf instance.
         public void LoadScene(BScene pScene) {
 
+        /*
             var gModel = ModelRoot.CreateModel();
             var gScene = gModel.UseScene(pScene.name);
 
@@ -97,10 +98,12 @@ namespace org.herbal3d.cs.CommonEntities {
                     });
                 }
             };
+            */
 
             _log.Debug("Gltf.LoadScene: loading scene {0}", pScene.name);
         }
 
+        /*
         private Dictionary<BHash, Material> _meshCollection = new Dictionary<BHash, Material>();
         private Material GetMaterial(ModelRoot pModel, RenderableMesh pRenderable) {
             Material mat;
@@ -145,6 +148,7 @@ namespace org.herbal3d.cs.CommonEntities {
             }
             return ret;
         }
+        */
 
         public void ToJSON(StreamWriter outt) {
         }

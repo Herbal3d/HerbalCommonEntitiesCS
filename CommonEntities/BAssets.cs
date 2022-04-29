@@ -34,9 +34,9 @@ namespace org.herbal3d.cs.CommonEntities {
             _log = pLog;
             Displayables = new Dictionary<BHash, Displayable>();
             Renderables = new Dictionary<BHash, DisplayableRenderable>();
-            Meshes = new DoubleDictionary<BHash, EntityHandle, MeshInfo>();
-            Materials = new DoubleDictionary<BHash, EntityHandle, MaterialInfo>();
-            Images = new DoubleDictionary<BHash, EntityHandle, ImageInfo>();
+            Meshes = new OMV.DoubleDictionary<BHash, EntityHandle, MeshInfo>();
+            Materials = new OMV.DoubleDictionary<BHash, EntityHandle, MaterialInfo>();
+            Images = new OMV.DoubleDictionary<BHash, EntityHandle, ImageInfo>();
         }
 
         // Displayables are the linksetable prim equivilient
@@ -49,9 +49,9 @@ namespace org.herbal3d.cs.CommonEntities {
         public Dictionary<BHash, DisplayableRenderable> Renderables;
         // Meshes are each of the individual meshes with material
         // Mesh == prim faces (that optionally reference a MaterialInfo and/or ImageInfo)
-        public DoubleDictionary<BHash, EntityHandle, MeshInfo> Meshes;
-        public DoubleDictionary<BHash, EntityHandle, MaterialInfo> Materials;
-        public DoubleDictionary<BHash, EntityHandle, ImageInfo> Images;
+        public OMV.DoubleDictionary<BHash, EntityHandle, MeshInfo> Meshes;
+        public OMV.DoubleDictionary<BHash, EntityHandle, MaterialInfo> Materials;
+        public OMV.DoubleDictionary<BHash, EntityHandle, ImageInfo> Images;
 
         // When done with this instance, clear all the lists
         public virtual void Dispose() {

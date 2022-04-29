@@ -35,6 +35,7 @@ namespace org.herbal3d.cs.CommonEntities {
         public bool displayTimeScaling = false;
         public bool doubleSided = false;
         public bool logBuilding = false;
+        public string convoarId = "26fa002c-780a-4e27-a2b7-9a81461a7a0a";   // owner Id of any terrain generated
     }
 
     // Convert things from OpenSimulator to Instances and Displayables things
@@ -84,7 +85,7 @@ namespace org.herbal3d.cs.CommonEntities {
                     terrainInstance = await Terrain.CreateTerrainMesh(scene: scene,
                                                                     assetMesher: mesher,
                                                                     assetManager: assetManager,
-                                                                    convoarId: "xx",
+                                                                    convoarId: _params.convoarId,
                                                                     halfRezTerrain: true,
                                                                     createTerrainSplat: true,
                                                                     logger: _log);
@@ -175,8 +176,8 @@ namespace org.herbal3d.cs.CommonEntities {
                 var pos = sog.AbsolutePosition;
                 var rot = sog.GroupRotation;
                 ret = new BInstance {
-                    Position = new Vector3(pos.X, pos.Y, pos.Z),
-                    Rotation = new Quaternion(rot.X, rot.Y, rot.Z, rot.W),
+                    Position = new OMV.Vector3(pos.X, pos.Y, pos.Z),
+                    Rotation = new OMV.Quaternion(rot.X, rot.Y, rot.Z, rot.W),
                     Representation = rootDisplayable
                 };
 
