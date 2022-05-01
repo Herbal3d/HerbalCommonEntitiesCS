@@ -217,9 +217,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\HerbalCommonUtilCS\Herbal3d.CommonUtil.csproj">
       <Project>{c0dfac61-6999-4278-855f-0e9bca2e8625}</Project>
       <Name>Herbal3d.CommonUtil</Name>
