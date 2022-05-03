@@ -156,6 +156,7 @@
     <Compile Include="PersistRules.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="VersionInfo.cs" />
     <Compile Include="WebGLConstants.cs">
       <SubType>Code</SubType>
     </Compile>
