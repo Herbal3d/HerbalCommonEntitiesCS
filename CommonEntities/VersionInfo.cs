@@ -4,7 +4,7 @@ using System;
 namespace org.herbal3d.cs.CommonEntities {
     public class VersionInfo {
         public static string appVersion = "2.0.1";
-        public static string longVersion = "2.0.1-20220503-bfe01b8a";
+        public static string longVersion = "2.0.1-20220503-192ad1d7";
         public static string buildDate = "20220503";
     }
 }
