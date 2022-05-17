@@ -1481,7 +1481,7 @@ namespace org.herbal3d.cs.CommonEntities {
             string imgFilename = this.GetFilename();
             var targetType = PersistRules.FigureOutTargetTypeFromAssetType(AssetType, _params);
             using (var stream = new MemoryStream()) {
-                imageInfo.image.Save(stream, PersistRules.TargetTypeToImageFormat[targetType]);
+                imageInfo.GetImage().Save(stream, PersistRules.TargetTypeToImageFormat[targetType]);
                 pStorage.Store(imgFilename, stream.ToArray());
             }
         }

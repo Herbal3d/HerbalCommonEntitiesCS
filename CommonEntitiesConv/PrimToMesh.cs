@@ -155,22 +155,48 @@ namespace org.herbal3d.cs.CommonEntities {
             try {
                 // Get the asset that the sculpty is built on
                 EntityHandleUUID texHandle = new EntityHandleUUID(prim.Sculpt.SculptTexture);
-                Image img = await assetManager.OSAssets.FetchTextureAsImage(texHandle);
+                Bitmap sculptTexture = null;
+                try {
+                    Image img = await assetManager.OSAssets.FetchTextureAsImage(texHandle);
 
-                // If image has transparancy, remove it.
-                // A common thing is to lay a transparency layer over the sculpt texture to make it harder to copy.
-                Bitmap scupltTexture = img as Bitmap;
-                if (Image.IsAlphaPixelFormat(img.PixelFormat)) {
-                    // TODO: There has got to be a quicker way to set the alpha layer to a value
-                    for (int xx = 0; xx < scupltTexture.Width; xx++) {
-                        for (int yy = 0; yy < scupltTexture.Height; yy++) {
-                            Color pix = scupltTexture.GetPixel(xx, yy);
-                            scupltTexture.SetPixel(xx, yy, Color.FromArgb(255, pix.R, pix.G, pix.B));
+                    // If image has transparancy, remove it.
+                    // A common thing is to lay a transparency layer over the sculpt texture to make it harder to copy.
+                    sculptTexture = img as Bitmap;
+                    if (Image.IsAlphaPixelFormat(img.PixelFormat)) {
+                        // TODO: There has got to be a quicker way to set the alpha layer to a value
+                        for (int xx = 0; xx < sculptTexture.Width; xx++) {
+                            for (int yy = 0; yy < sculptTexture.Height; yy++) {
+                                Color pix = sculptTexture.GetPixel(xx, yy);
+                                sculptTexture.SetPixel(xx, yy, Color.FromArgb(255, pix.R, pix.G, pix.B));
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex) {
+                    _log.Error("{0} MeshFromPrimSculptData: exception fetching texture {1}. Building replacement",
+                        _logHeader, texHandle);
+                    // For some reason can't get the texture. So fake something
+                    // Loosely based on C++ code detailed in
+                    //       https://wiki.secondlife.com/wiki/Sculpted_Prims:_Technical_Explanation
+                    var wid = 32;
+                    var hig = 32;
+                    sculptTexture = new Bitmap(wid, hig);
+                    for (int yy = 0; yy < hig; ++yy) {
+                        for (int xx = 0; xx < wid; ++xx) {
+                            var r = (float)xx / (wid / 2);
+                            var g = (float)yy / (hig / 2);
+                            var b = 1.0;
+                            if (xx % 2 == 1) b = 0.5;
+                            if (yy % 2 == 1) b = 0.5;
+                            if (xx == wid - 1) b = 0.98;
+                            if (yy == hig - 1) b = 0.98;
+                            if (xx == wid / 2 && (yy == 0 || yy == hig-1)) b = 0.7;
+                            sculptTexture.SetPixel(xx, yy, Color.FromArgb(255, (int)r, (int)g, (int)b));
                         }
                     }
                 }
 
-                OMVR.FacetedMesh fMesh = _mesher.GenerateFacetedSculptMesh(prim, scupltTexture, lod);
+                OMVR.FacetedMesh fMesh = _mesher.GenerateFacetedSculptMesh(prim, sculptTexture, lod);
                 DisplayableRenderable dr =
                         await ConvertFacetedMeshToDisplayable(assetManager, fMesh, prim.Textures.DefaultTexture, prim.Scale);
                 // Get the hash for this converted prim/mesh
@@ -311,14 +337,9 @@ namespace org.herbal3d.cs.CommonEntities {
                     catch (Exception e) {
                         // Failure getting the image
                         _log.Error("{0} Failure fetching material texture. id={1}. {2}",
-                                    _logHeader, matInfo.textureID, e);
+                                    _logHeader, matInfo.textureID, e.Message);
                         // Create a simple, single color image to fill in for the missing image
-                        var fillInImage = new Bitmap(32, 32, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-                        Color theColor = Color.FromArgb(128, 202, 213, 170);    // 0x80CAB5AA
-                        for (int xx=0; xx<32; xx++)
-                            for (int yy=0; yy<32; yy++)
-                                fillInImage.SetPixel(xx, yy, theColor);
-                        imageInfo.SetImage(fillInImage);
+                        imageInfo.SetImage(ImageInfo.CreateFillImage());
                     }
                     imageInfo.imageIdentifier = (OMV.UUID)matInfo.textureID;
                     LogBProgress("{0} ConvertFaceToRenderableMesh: create ImageInfo. hash={1}, id={2}",

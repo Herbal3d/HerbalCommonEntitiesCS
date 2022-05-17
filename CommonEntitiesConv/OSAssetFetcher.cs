@@ -151,13 +151,13 @@ namespace org.herbal3d.cs.CommonEntities {
         */
 
         // An async/await version of async call to OpenSimulator AssetService.
-        public async Task<AssetBase> AssetServiceGetAsync(EntityHandle pHandle) {
+        public Task<AssetBase> AssetServiceGetAsync(EntityHandle pHandle) {
             var tcs = new TaskCompletionSource<AssetBase>();
             _assetService.Get(pHandle.GetUUID().ToString(), this, (rid, rsender, rasset) => {
                 tcs.SetResult(rasset);
             });
 
-            return await tcs.Task;
+            return tcs.Task;
         }
 
 

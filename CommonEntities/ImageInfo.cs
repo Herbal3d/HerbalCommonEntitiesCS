@@ -93,6 +93,26 @@ namespace org.herbal3d.cs.CommonEntities {
 
         }
 
+        // Create a replacement image that is used when something is needed.
+        public static Image CreateFillImage() {
+            const int wid = 16;
+            var fillInImage = new Bitmap(wid, wid, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            Color theColor = Color.FromArgb(128, 202, 213, 170);    // 0x80CAB5AA
+            for (int xx = 0; xx < wid; xx++)
+                for (int yy = 0; yy < wid; yy++)
+                    fillInImage.SetPixel(xx, yy, theColor);
+            return fillInImage;
+        }
+
+        // Get the image. If there is no image set, return a fabricated image.
+        public Image GetImage() {
+            if (_image == null) {
+                _log.Error("{0} Replacing missing image {1}", _logHeader, imageIdentifier);
+                return ImageInfo.CreateFillImage();
+            }
+            return _image;
+        }
+
         // Get the image as bytes converted into the output format (PNG, JPEG, ...)
         public byte[] GetConvertedImage() {
             return _convertedImage;
