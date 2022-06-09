@@ -1252,9 +1252,9 @@ namespace org.herbal3d.cs.CommonEntities {
             return ret;
         }
 
-        public void WriteBuffer(BAssetStorage pStorage) {
+        public async void WriteBuffer(BAssetStorage pStorage) {
             string outFilename = this.GetFilename(_identifyingString);
-            pStorage.Store(outFilename, bufferBytes);
+            await pStorage.Store(outFilename, bufferBytes);
             // _log.DebugFormat("{0} WriteBinaryFiles: filename={1}", LogHeader, outFilename);
         }
     }
@@ -1477,12 +1477,12 @@ namespace org.herbal3d.cs.CommonEntities {
             return img;
         }
 
-        public void WriteImage(BAssetStorage pStorage) {
+        public async void WriteImage(BAssetStorage pStorage) {
             string imgFilename = this.GetFilename();
             var targetType = PersistRules.FigureOutTargetTypeFromAssetType(AssetType, _params);
             using (var stream = new MemoryStream()) {
                 imageInfo.GetImage().Save(stream, PersistRules.TargetTypeToImageFormat[targetType]);
-                pStorage.Store(imgFilename, stream.ToArray());
+                await pStorage.Store(imgFilename, stream.ToArray());
             }
         }
 
