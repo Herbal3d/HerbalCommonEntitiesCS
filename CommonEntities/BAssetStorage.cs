@@ -132,8 +132,10 @@ namespace org.herbal3d.cs.CommonEntities {
             string outDir = this.GetStorageDir(pEntityName);
             string absDir = PersistRules.CreateDirectory(outDir);
             string absFilename = Path.Combine(absDir, pEntityName);
-            using (FileStream stream = File.Open(absFilename, FileMode.OpenOrCreate)) {
-                await stream.WriteAsync(pData, 0, pData.Length);
+            if (!File.Exists(absFilename)) {
+                using (FileStream stream = File.Open(absFilename, FileMode.OpenOrCreate)) {
+                    await stream.WriteAsync(pData, 0, pData.Length);
+                }
             }
         }
 
