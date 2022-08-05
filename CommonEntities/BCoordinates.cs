@@ -126,6 +126,7 @@ namespace org.herbal3d.cs.CommonEntities {
 
         // Static constants used to transform Zup coordinates to Yup coordinates
         public static OMV.Quaternion coordTransformQZupToYup = OMV.Quaternion.CreateFromAxisAngle(OMV.Vector3.UnitX, -(float)Math.PI / 2f);
+        public static OMV.Quaternion coordTransformQZupToYupInv = OMV.Quaternion.Inverse(coordTransformQZupToYup);
         // public static OMV.Quaternion coordTransformQZupToYup = new OMV.Quaternion(-(float)Math.PI/4f, 0.0f, 0.0f, (float)Math.PI / 4f);
         // Make a clean matrix version.
         // The libraries tend to create matrices with small numbers (1.119093e-07) for zero.
@@ -145,23 +146,25 @@ namespace org.herbal3d.cs.CommonEntities {
 
             if (inst.coordAxis.system != newCoords.system) {
 
+                /*
                 OMV.Matrix4 coordTransform = OMV.Matrix4.Identity;
                 OMV.Quaternion coordTransformQ = OMV.Quaternion.Identity;
                 if (inst.coordAxis.GetUpDimension == CoordAxis.Zup
                     && newCoords.GetUpDimension == CoordAxis.Yup) {
                     // The one thing we know to do is change from Zup to Yup
                     coordTransformQ = coordTransformQZupToYup;
-                    // Make a clean matrix version.
-                    // The libraries tend to create matrices with small numbers (1.119093e-07) for zero.
                     coordTransform = coordTransformZupToYup;
                 }
+                */
 
                 OMV.Vector3 oldPos = inst.Position;   // DEBUG DEBUG
                 OMV.Quaternion oldRot = inst.Rotation;   // DEBUG DEBUG
                 // Fix the location in space
                 // inst.Position = inst.Position * coordTransform;
-                inst.Position = new OMV.Vector3(inst.Position.X, inst.Position.Z, -inst.Position.Y);
-                inst.Rotation = coordTransformQ * inst.Rotation;
+                // inst.Position = new OMV.Vector3(inst.Position.X, inst.Position.Z, -inst.Position.Y);
+                // inst.Rotation = coordTransformQ * inst.Rotation;
+                inst.Position = ConvertZupToYup(inst.Position);
+                inst.Rotation = ConvertZupToYup(inst.Rotation);
 
                 inst.coordAxis = newCoords;
                 // _log.DebugFormat("{0} FixCoordinates. dispID={1}, oldPos={2}, newPos={3}, oldRot={4}, newRot={5}",
@@ -204,9 +207,48 @@ namespace org.herbal3d.cs.CommonEntities {
         }
         public static OMV.Quaternion ConvertZupToYup(OMV.Quaternion pRot) {
             // return pRot * coordTransformQZupToYup;
-            // return coordTransformQZupToYup * pRot;
-            return new OMV.Quaternion(pRot.X, pRot.Z, -pRot.Y, pRot.W);
+            return coordTransformQZupToYup * pRot;
+            // return new OMV.Quaternion(pRot.X, pRot.Z, -pRot.Y, pRot.W);
         }
 
+    }
+
+    // ================================================================================
+    // Functions for handling conversion of entity coords from local (OpenSim) to
+    //    planetary (what's sent in an out over the wire)
+
+    // Holds a planet frame-of-reference
+    public class BFrameOfRef {
+        public double latitude;
+        public double longitude;
+        public double altitude;
+    }
+
+    public static class BCoord {
+        // Take a coordinate in OpenSim (right-hand, Zup, relative to frame-of-reference) and
+        //    turn it into a planet coordinate (WSG86: lat,long,elev)
+        // For dev, the planet coordinates are sent as (x, y, height) (right-handed, Zup)
+        public static double[] ToPlanetCoord(BFrameOfRef bRef, OMV.Vector3 pPos) {
+            // OMV.Vector3 thePos = CoordAxis.ConvertZupToYup(pPos);
+            // OMV.Vector3 thePos = presence.AbsolutePosition;
+            // _context.log.Debug("[PresenceInfo.GetWorldPosition]: <{0},{1},{2}> => <{3},{4},{5}>",
+            //         absPos.X, absPos.Y, absPos.Z, thePos.X, thePos.Y, thePos.Z);
+            // return new double[] { pPos.X, pPos.Z, -pPos.Y };
+            return new double[] { pPos.X, pPos.Y, pPos.Z };
+        }
+        public static double[] ToPlanetRot(BFrameOfRef bRef, OMV.Quaternion pRot) {
+            // OMV.Quaternion theRot = CoordAxis.ConvertZupToYup(pRot);
+            // return new double[] { theRot.X, theRot.Y, theRot.Z, theRot.W };
+            return new double[] { pRot.X, pRot.Y, pRot.Z, pRot.W };
+        }
+        public static OMV.Vector3 FromPlanetCoord(BFrameOfRef bRef, double[] pPlanetPos) {
+            // return new OMV.Vector3((float)pPlanetPos[0], (float)pPlanetPos[2], -(float)pPlanetPos[1] );
+            return new OMV.Vector3((float)pPlanetPos[0], (float)pPlanetPos[1], (float)pPlanetPos[2] );
+        }
+        public static OMV.Quaternion FromPlanetRot(BFrameOfRef bRef, double[] pPlanetRot) {
+            // OMV.Quaternion planetRot = new OMV.Quaternion((float)pPlanetRot[0], (float)pPlanetRot[1], (float)pPlanetRot[2], (float)pPlanetRot[3]);
+            // return CoordAxis.coordTransformQZupToYupInv * planetRot;
+            return new OMV.Quaternion((float)pPlanetRot[0], (float)pPlanetRot[1], (float)pPlanetRot[2], (float)pPlanetRot[3]);
+        }
     }
 }
