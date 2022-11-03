@@ -28,8 +28,8 @@ namespace org.herbal3d.cs.CommonEntities {
         Task<byte[]> Fetch(EntityHandle pHandle);
         Task<byte[]> Fetch(string pEntityName);
         Task<Stream> GetStream(string pEntityName);
-        Task Store(EntityHandle pHandle, byte[] pData);
-        Task Store(string pEntityName, byte[] pData);
+        Task Store(EntityHandle pHandle, byte[] pData, bool pForce = false);
+        Task Store(string pEntityName, byte[] pData, bool pForce = false);
         Task<string> FetchText(EntityHandle pHandle);
         Task<string> FetchText(string pEntityName);
         Task StoreText(EntityHandle pHandle, string pContents);
@@ -115,11 +115,11 @@ namespace org.herbal3d.cs.CommonEntities {
             });
         }
 
-        public async Task Store(EntityHandle pHandle, byte[] pData) {
-            await Store(pHandle.ToString().Replace("-", ""), pData);
+        public async Task Store(EntityHandle pHandle, byte[] pData, bool pForce = false) {
+            await Store(pHandle.ToString().Replace("-", ""), pData, pForce);
         }
 
-        public async Task Store(string pEntityName, byte[] pData) {
+        public async Task Store(string pEntityName, byte[] pData, bool pForce = false) {
             /*
             return Task<byte[]>.Run(() => {
                 string strippedEntityName = Path.GetFileNameWithoutExtension(pEntityName);
@@ -132,7 +132,7 @@ namespace org.herbal3d.cs.CommonEntities {
             string outDir = this.GetStorageDir(pEntityName);
             string absDir = PersistRules.CreateDirectory(outDir);
             string absFilename = Path.Combine(absDir, pEntityName);
-            if (!File.Exists(absFilename)) {
+            if (pForce || !File.Exists(absFilename)) {
                 using (FileStream stream = File.Open(absFilename, FileMode.OpenOrCreate)) {
                     await stream.WriteAsync(pData, 0, pData.Length);
                 }
