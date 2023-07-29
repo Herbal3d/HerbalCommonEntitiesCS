@@ -1,203 +1,123 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="16.0">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>16.7.3</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CE3D1850-0000-0000-0000-000000000000}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
-    <AssemblyName>Herbal3d.CommonEntitiesConv</AssemblyName>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
-    <DelaySign>false</DelaySign>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFramework>net6.0</TargetFramework>
+    <PreserveCompilationContext>false</PreserveCompilationContext>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>
-    </AppDesignerFolder>
-    <RootNamespace>Herbal3d.CommonEntitiesConv</RootNamespace>
-    <StartupObject>
-    </StartupObject>
-    <StartArguments>
-    </StartArguments>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>Herbal3d.CommonEntitiesConv</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;NET48;</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile></DocumentationFile>
     <DebugSymbols>True</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <Optimize>False</Optimize>
+    <TieredCompilationQuickJit>false</TieredCompilationQuickJit>
+    <UseCommonOutputDirectory>True</UseCommonOutputDirectory>
+    <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
     <OutputPath>../../../bin/</OutputPath>
     <RegisterForComInterop>False</RegisterForComInterop>
     <RemoveIntegerChecks>False</RemoveIntegerChecks>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>False</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>CA1416,SYSLIB0011,SYSLIB0014</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>False</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>NET48;</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DefineConstants></DefineConstants>
+    <DocumentationFile></DocumentationFile>
     <DebugSymbols>False</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <Optimize>True</Optimize>
+    <TieredCompilationQuickJit>false</TieredCompilationQuickJit>
+    <UseCommonOutputDirectory>True</UseCommonOutputDirectory>
+    <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
     <OutputPath>../../../bin/</OutputPath>
     <RegisterForComInterop>False</RegisterForComInterop>
     <RemoveIntegerChecks>False</RemoveIntegerChecks>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>False</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>CA1416,SYSLIB0011,SYSLIB0014</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>False</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
+    <Reference Include="CSJ2K" >
+      <Name>CSJ2K</Name>
+      <HintPath>../../../bin/CSJ2K.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="log4net" >
       <Name>log4net</Name>
+      <HintPath>../../../bin/log4net.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Mono.Addins">
-      <Name>Mono.Addins</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Nini">
+    <Reference Include="Nini" >
       <Name>Nini</Name>
+      <HintPath>../../../bin/Nini.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="OpenMetaverse">
+    <Reference Include="OpenMetaverse" >
       <Name>OpenMetaverse</Name>
+      <HintPath>../../../bin/OpenMetaverse.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="OpenMetaverse.Rendering.Meshmerizer">
+    <Reference Include="OpenMetaverse.Rendering.Meshmerizer" >
       <Name>OpenMetaverse.Rendering.Meshmerizer</Name>
+      <HintPath>../../../bin/OpenMetaverse.Rendering.Meshmerizer.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="OpenMetaverse.StructuredData">
+    <Reference Include="OpenMetaverse.StructuredData" >
       <Name>OpenMetaverse.StructuredData</Name>
+      <HintPath>../../../bin/OpenMetaverse.StructuredData.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="OpenMetaverseTypes">
+    <Reference Include="OpenMetaverseTypes" >
       <Name>OpenMetaverseTypes</Name>
+      <HintPath>../../../bin/OpenMetaverseTypes.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="OpenSim.Capabilities, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Capabilities.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Data.Null, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Data.Null.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Framework, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Framework.Monitoring, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Framework.Monitoring.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Framework.Serialization, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Framework.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Framework.Servers.HttpServer, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Framework.Servers.HttpServer.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Region.CoreModules, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Region.CoreModules.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Region.Framework, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Region.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Region.PhysicsModule.BasicPhysics, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Region.PhysicsModule.BasicPhysics.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Region.PhysicsModules.SharedBase, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Region.PhysicsModules.SharedBase.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Services.Connectors, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Services.Connectors.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Services.Interfaces, Version=0.9.2.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Services.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenSim.Tests.Common, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\OpenSim.Tests.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="PrimMesher">
+    <Reference Include="PrimMesher" >
       <Name>PrimMesher</Name>
+      <HintPath>../../../bin/PrimMesher.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SmartThreadPool, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\SmartThreadPool.dll</HintPath>
-    </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
+    <Reference Include="System.Drawing.Common" >
+      <Name>System.Drawing.Common</Name>
+      <HintPath>../../../bin/System.Drawing.Common.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <Name>System.Data.DataSetExtensions</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Drawing">
-      <Name>System.Drawing</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Net.Http">
-      <Name>System.Net.Http</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Reflection">
-      <Name>System.Reflection</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="zlib.net, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\bin\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AssetManager.cs">
+    <Compile Include="Terrain.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PrimToMesh.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BConverterOS.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MemAssetService.cs">
+    <Compile Include="VersionInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MeshmerizerR.cs">
@@ -206,32 +126,14 @@
     <Compile Include="OSAssetFetcher.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PrimToMesh.cs">
+    <Compile Include="MemAssetService.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Terrain.cs">
+    <Compile Include="AssetManager.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VersionInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\HerbalCommonUtilCS\Herbal3d.CommonUtil.csproj">
-      <Project>{c0dfac61-6999-4278-855f-0e9bca2e8625}</Project>
-      <Name>Herbal3d.CommonUtil</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\CommonEntities\Herbal3d.CommonEntities.csproj">
-      <Project>{1267952c-0000-0000-0000-000000000000}</Project>
-      <Name>Herbal3d.CommonEntities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>

@@ -1,180 +1,146 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="16.0">
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <ProjectType>Local</ProjectType>
-    <ProductVersion>16.7.3</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1267952C-0000-0000-0000-000000000000}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ApplicationIcon>
-    </ApplicationIcon>
-    <AssemblyKeyContainerName>
-    </AssemblyKeyContainerName>
-    <AssemblyName>Herbal3d.CommonEntities</AssemblyName>
-    <DefaultClientScript>JScript</DefaultClientScript>
-    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
-    <DefaultTargetSchema>IE50</DefaultTargetSchema>
-    <DelaySign>false</DelaySign>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFramework>net6.0</TargetFramework>
+    <PreserveCompilationContext>false</PreserveCompilationContext>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>
-    </AppDesignerFolder>
-    <RootNamespace>Herbal3d.CommonEntities</RootNamespace>
-    <StartupObject>
-    </StartupObject>
-    <StartArguments>
-    </StartArguments>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AssemblyName>Herbal3d.CommonEntities</AssemblyName>
+    <Deterministic>true</Deterministic>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <EnableDefaultItems>false</EnableDefaultItems>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>TRACE;DEBUG;NET48;</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile></DocumentationFile>
     <DebugSymbols>True</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <Optimize>False</Optimize>
+    <TieredCompilationQuickJit>false</TieredCompilationQuickJit>
+    <UseCommonOutputDirectory>True</UseCommonOutputDirectory>
+    <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
     <OutputPath>../../../bin/</OutputPath>
     <RegisterForComInterop>False</RegisterForComInterop>
     <RemoveIntegerChecks>False</RemoveIntegerChecks>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>False</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>CA1416,SYSLIB0011,SYSLIB0014</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>False</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <BaseAddress>285212672</BaseAddress>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <ConfigurationOverrideFile>
     </ConfigurationOverrideFile>
-    <DefineConstants>NET48;</DefineConstants>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DefineConstants></DefineConstants>
+    <DocumentationFile></DocumentationFile>
     <DebugSymbols>False</DebugSymbols>
     <FileAlignment>4096</FileAlignment>
     <Optimize>True</Optimize>
+    <TieredCompilationQuickJit>false</TieredCompilationQuickJit>
+    <UseCommonOutputDirectory>True</UseCommonOutputDirectory>
+    <AppendTargetFrameworkToOutputPath>False</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>False</AppendRuntimeIdentifierToOutputPath>
     <OutputPath>../../../bin/</OutputPath>
     <RegisterForComInterop>False</RegisterForComInterop>
     <RemoveIntegerChecks>False</RemoveIntegerChecks>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>False</NoStdLib>
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>CA1416,SYSLIB0011,SYSLIB0014</NoWarn>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>False</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenMetaverse">
+    <Reference Include="OpenMetaverse" >
       <Name>OpenMetaverse</Name>
+      <HintPath>../../../bin/OpenMetaverse.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="OpenMetaverseTypes">
+    <Reference Include="OpenMetaverseTypes" >
       <Name>OpenMetaverseTypes</Name>
+      <HintPath>../../../bin/OpenMetaverseTypes.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System">
-      <Name>System</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Data">
-      <Name>System.Data</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <Name>System.Data.DataSetExtensions</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Drawing">
-      <Name>System.Drawing</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Net.Http">
-      <Name>System.Net.Http</Name>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Reflection">
-      <Name>System.Reflection</Name>
+    <Reference Include="System.Drawing.Common" >
+      <Name>System.Drawing.Common</Name>
+      <HintPath>../../../bin/System.Drawing.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../HerbalCommonUtilCS/Herbal3d.CommonUtil.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="BAssets.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BAssetStorage.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BAttributes.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BCoordinates.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BInstance.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BScene.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="BSceneManipulation.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Displayable.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="EntityHandle.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="GltfClassesBespoke.cs" />
-    <Compile Include="GltfClasses.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ImageInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="JSONHelpers.cs">
+    <Compile Include="GltfClassesBespoke.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MaterialInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GltfClasses.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MatrixOps.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VersionInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BAttributes.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BSceneManipulation.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WebGLConstants.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="MeshInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="JSONHelpers.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PersistRules.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VersionInfo.cs" />
-    <Compile Include="WebGLConstants.cs">
+    <Compile Include="EntityHandle.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Displayable.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ImageInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BCoordinates.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BAssetStorage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BScene.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BInstance.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\HerbalCommonUtilCS\Herbal3d.CommonUtil.csproj">
-      <Project>{c0dfac61-6999-4278-855f-0e9bca2e8625}</Project>
-      <Name>Herbal3d.CommonUtil</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
 </Project>
