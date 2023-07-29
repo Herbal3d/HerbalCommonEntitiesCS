@@ -37,9 +37,9 @@ namespace org.herbal3d.cs.CommonEntities {
                 // _log.ErrorFormat("SimpleJSONOutput: called with NULL value");
                 val = "null";
             }
-            if (val is string) {
+            if (val is string sval) {
                 // escape any double quotes in the string value
-                outt.Write("\"" + ((string)val).Replace("\"", "\\\"") + "\"");
+                outt.Write("\"" + sval.Replace("\"", "\\\"") + "\"");
             }
             else if (val is bool bval) {
                 outt.Write(bval ? "true" : "false");
@@ -96,17 +96,18 @@ namespace org.herbal3d.cs.CommonEntities {
                 // _log.ErrorFormat("JSONHelpers: Value is Double.NaN!!");
                 outt.Write("0");
             }
-            else if (val is float) {
+            else if (val is float fval) {
                 // there is some problems with floats being different as binary
                 //     and as text string. Don't know if limiting significant
                 //     digits might help.
                 // outt.Write(((float)val).ToString("0.#######"));
-                outt.Write(((float)val).ToString("G9"));
+                outt.Write(fval.ToString("G9"));
             }
             else {
                 var ret = val.ToString();
                 if (ret == "NaN") {
                     // _log.ErrorFormat("JSONHelpers: Value is NaN!!");
+                    outt.Write("0");
                 }
                 else {
                     outt.Write(val);

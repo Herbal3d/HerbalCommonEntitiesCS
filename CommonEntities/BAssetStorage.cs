@@ -56,7 +56,7 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public Task<byte[]> Fetch(EntityHandle pHandle) {
-            return Fetch(pHandle.ToString().Replace("-", ""));
+            return Fetch(HandleToFilename(pHandle));
         }
 
         // Returns a byte array of length zero if item was not fetched.
@@ -115,11 +115,11 @@ namespace org.herbal3d.cs.CommonEntities {
             });
         }
 
-        public async Task Store(EntityHandle pHandle, byte[] pData, bool pForce = false) {
-            await Store(pHandle.ToString().Replace("-", ""), pData, pForce);
+        public Task Store(EntityHandle pHandle, byte[] pData, bool pForce = false) {
+            return Store(HandleToFilename(pHandle), pData, pForce);
         }
 
-        public async Task Store(string pEntityName, byte[] pData, bool pForce = false) {
+        public Task Store(string pEntityName, byte[] pData, bool pForce = false) {
             /*
             return Task<byte[]>.Run(() => {
                 string strippedEntityName = Path.GetFileNameWithoutExtension(pEntityName);
@@ -129,18 +129,20 @@ namespace org.herbal3d.cs.CommonEntities {
                 File.WriteAllBytes(absFilename, pData);
             });
             */
-            string outDir = this.GetStorageDir(pEntityName);
-            string absDir = PersistRules.CreateDirectory(outDir);
-            string absFilename = Path.Combine(absDir, pEntityName);
-            if (pForce || !File.Exists(absFilename)) {
-                using (FileStream stream = File.Open(absFilename, FileMode.OpenOrCreate)) {
-                    await stream.WriteAsync(pData, 0, pData.Length);
+            return Task.Run(() => {
+                string outDir = this.GetStorageDir(pEntityName);
+                string absDir = PersistRules.CreateDirectory(outDir);
+                string absFilename = Path.Combine(absDir, pEntityName);
+                if (pForce || !File.Exists(absFilename)) {
+                    using (FileStream stream = File.Open(absFilename, FileMode.OpenOrCreate)) {
+                        stream.WriteAsync(pData, 0, pData.Length);
+                    }
                 }
-            }
+            });
         }
 
         public Task<string> FetchText(EntityHandle pHandle) {
-            return FetchText(pHandle.ToString().Replace("-", ""));
+            return FetchText(HandleToFilename(pHandle));
         }
 
         public async Task<string> FetchText(string pEntityName) {
@@ -149,11 +151,11 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public Task StoreText(EntityHandle pHandle, string pContents) {
-            return StoreText(pHandle.ToString().Replace("-", ""), pContents);
+            return StoreText(HandleToFilename(pHandle), pContents);
         }
 
-        public async Task StoreText(string pEntityName, string pContents) {
-            await Store(pEntityName, Encoding.UTF8.GetBytes(pContents));
+        public Task StoreText(string pEntityName, string pContents) {
+            return Store(pEntityName, Encoding.UTF8.GetBytes(pContents));
         }
 
         /// <summary>
@@ -168,6 +170,10 @@ namespace org.herbal3d.cs.CommonEntities {
         }
 
         public void Dispose() {
+        }
+
+        public string HandleToFilename(EntityHandle pHandle) {
+            return pHandle.ToString().Replace("-", "");
         }
     }
 }
